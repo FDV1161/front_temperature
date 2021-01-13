@@ -33,6 +33,22 @@
 
     </v-content>
 
+
+    <v-footer
+      app
+      color=green      
+      inset
+    >
+      <v-text-field
+        background-color="grey lighten-1"
+        dense
+        flat
+        hide-details
+        rounded
+        solo
+      ></v-text-field>
+    </v-footer>
+
   
     
   

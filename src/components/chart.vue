@@ -10,8 +10,8 @@
 import { Line } from 'vue-chartjs'
 
 let one_data = [-25, 44, -53, -91, -30, -56, -70, 79, -35, 52, -48, -52, -81, 75, -2, 36, 59, -57, 27, 21];
-let timerId = setInterval(() => one_data.push( Math.random() * (100 + 100) - 100), 1000);
-setTimeout(() => { clearInterval(timerId); alert('stop'); }, 20000);
+// let timerId = setInterval(() => one_data.push( Math.random() * (100 + 100) - 100), 1000);
+// setTimeout(() => { clearInterval(timerId); alert('stop'); }, 20000);
 // [-25, 44, -53, -91, -30, -56, -70, 79, -35, 52, -48, -52, -81, 75, -2, 36, 59, -57, 27, 21]                              
 
 export default {

@@ -1,15 +1,16 @@
 <template>
   <v-app>
-    <v-app-bar 
+    <!-- <v-app-bar 
       app
       color=orange            
       clipped-left
-    />
+    /> -->
+    <AppBar :color=app_settings.app_color />
     
     <v-navigation-drawer 
       app
       clipped
-      color=orange
+      :color=app_settings.app_color
     >
 
     <List />
@@ -73,6 +74,7 @@
 // import HelloWorld from './components/HelloWorld';
 import MyChart from "@/components/chart.vue"
 import List from "@/components/list.vue"
+import AppBar from "@/components/AppBar.vue"
 
 export default {
   name: 'App',
@@ -82,11 +84,15 @@ export default {
   components: {
     // HelloWorld,
     MyChart,
-    List
+    List,
+    AppBar
   },
 
   data: () => ({
     //
+    app_settings: {
+      app_color: "green",
+    }
   }),
 };
 </script>

@@ -1,28 +1,92 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-app-bar 
+      app
+      color=orange            
+      clipped-left
+    />
+    
+    <v-navigation-drawer 
+      app
+      clipped
+      color=orange
+    >
+
+    <List />
+
+    </v-navigation-drawer>
+    
+
+    <v-content 
+      app            
+    >
+    <v-container fluid fill-height>
+    <v-row align="center" justify="center">
+      <v-col align="center">
+        <v-sheet
+          color="white"
+          elevation="10"
+          height="142"
+          width="166"
+        >    
+      </v-sheet>  
+      </v-col>
+          
+
+    
+    </v-row>
+
+    <v-row>
+      <v-col align="center">        
+      <MyChart />
+      </v-col>
+    </v-row>
+
+    </v-container>
+
+    
+
+    
+
+    </v-content>
+
+
+    <v-footer
+      app
+      color=green      
+      inset
+    >
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    </v-footer>
+
+  
+  
+    
+  
+
+      
+  </v-app>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld';
+import MyChart from "@/components/chart.vue"
+import List from "@/components/list.vue"
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+
+
+  components: {
+    // HelloWorld,
+    MyChart,
+    List
+  },
+
+  data: () => ({
+    //
+  }),
+};
+</script>

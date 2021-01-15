@@ -1,7 +1,7 @@
 <template>
 
   
-    <v-list color=orange>
+    <v-list dark >
       <v-subheader>Sensors</v-subheader>
       <v-list-item-group
         v-model="selectedItem"

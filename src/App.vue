@@ -1,80 +1,104 @@
 <template>
   <v-app>
-    <v-app-bar 
-      app
-      color=orange            
-      clipped-left
-    />
-    <AppBar :color="app_settings.app_color" :drawer="drawer" />
+    <v-app-bar app color="orange" clipped-left />
+    <AppBar :color="app_settings.app_color" :drawer="drawer" :menu="menu" />
     <!-- https://codepen.io/kematzy/pen/zJmXwJ -->
-
 
     <v-navigation-drawer
       app
       clipped
       :color="app_settings.app_color"
-      v-model="drawer.side_bar"      
+      v-model="drawer.side_bar"
     >
       <List />
     </v-navigation-drawer>
-
-    <v-content app>
-      <v-container fluid fill-height>
-        <v-row align="center" justify="center">
-          <v-col align="center">
-            <v-sheet color="white" elevation="10" height="142" width="166">
-            </v-sheet>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col align="center">
-            <MyChart />
-          </v-col>
-        </v-row>
-      </v-container>
+  
+    <v-content app > 
+      <MainContent />
     </v-content>
 
-    <v-footer app color="green" inset>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-footer app inset class="pa-0 footer_color">
+      <v-toolbar dark fluid flat color="#fff0">
+        <v-toolbar-items>
+        <v-btn icon @click="drawer.side_bar = !drawer.side_bar">
+        <v-icon> mdi-dots-vertical </v-icon>
+      </v-btn>
+      </v-toolbar-items>
+        <v-toolbar-items>
+          <v-btn text>
+            <v-icon>mdi-plus</v-icon>
+            <span class="text-capitalize"> Append chart </span>
+          </v-btn>
+        </v-toolbar-items>
+        
+
+      </v-toolbar>
     </v-footer>
   </v-app>
 </template>
 
 
 <script>
-// import HelloWorld from './components/HelloWorld';
-import MyChart from "@/components/chart.vue";
+import MainContent from "@/components/Content.vue";
 import List from "@/components/list.vue";
 import AppBar from "@/components/AppBar.vue";
-
-// let default_side_bar = true;
-// if (window.innerWidth <= 1264) {
-//   default_side_bar = false;
-// }
-
-// console.log(window.innerWidth);
-
-
 
 export default {
   name: "App",
 
   components: {
-    // HelloWorld,
-    MyChart,
     List,
     AppBar,
+    MainContent,
   },
 
   data: () => ({
+    menu: [
+      {        
+        text: "Sensors",
+        icon: "mdi-thermometer-lines",
+        // bolt camcorder camera-timer cog-transfer consolidate cpu-32-bit home-automation pulse thermometer-lines
+      },
+      {        
+        text: "Charts",
+        icon: "mdi-chart-bell-curve",
+      },
+      {        
+        text: "NotCharts",
+        icon: "mdi-chart-bubble",
+      },
+      {        
+        text: "Login",
+        icon: "mdi-login-variant",
+      }
+    ], 
+
     drawer: {
-      side_bar: window.innerWidth > 1264, // in order to not show after a reboots 
-      nav_bar: false
+      side_bar: window.innerWidth > 1264, // in order to not show after a reboots
+      nav_bar: false,
     },
     app_settings: {
-      app_color: "green",
+      app_color: "main_color",
     },
   }),
 };
 </script>
+
+
+<style>
+
+.inherited {
+  background: #fff0;
+}
+
+.main_color {
+  background: rgb(30,49,86);
+  background: linear-gradient(90deg, rgba(30,49,86,1) 0%, rgba(29,55,105,1) 50%, rgba(25,56,116,1) 100%);
+}
+
+.footer_color {
+   background: rgb(25,56,115);
+  background: linear-gradient(90deg, rgba(25,56,115,1) 0%, rgba(29,55,105,1) 50%, rgba(30,49,86,1) 100%); 
+}
+
+</style>

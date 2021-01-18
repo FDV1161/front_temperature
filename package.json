@@ -11,11 +11,13 @@
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.1",
+    "vue-router": "^3.4.9",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
     "@mdi/font": "^5.8.55",
     "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-router": "^4.5.10",
     "@vue/cli-service": "~4.5.0",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",

@@ -17,7 +17,7 @@
       </v-toolbar-items>
 
       <v-toolbar-items class="hidden-sm-and-down" v-for="(item, i) in menu" :key="i">
-        <v-btn text>
+        <v-btn text router :to='item.link'>
           <v-icon left>{{item.icon}}</v-icon>
           <span class="text-capitalize"> {{item.text}} </span>
         </v-btn>        
@@ -47,7 +47,7 @@
 
         <v-list>
             <v-list-item-group >
-          <v-list-item v-for="(item, i) in menu" :key="i">
+          <v-list-item v-for="(item, i) in menu" :key="i" router :to='item.link'>
             <v-list-item-icon>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -68,6 +68,13 @@
 <script>
 export default {
   props: ["color", "drawer", "menu"],
+  
+  watch:{
+        $route (to, from){
+            this.drawer.nav_bar = false;
+        }
+    },
+
 
   data: () => ({
     

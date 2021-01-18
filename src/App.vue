@@ -13,8 +13,15 @@
       <List />
     </v-navigation-drawer>
   
-    <v-content app > 
-      <MainContent />
+    <v-content app >
+      <!-- this.$route.name -->
+      <v-breadcrumbs
+        :items="menu"
+        large
+      >
+
+      </v-breadcrumbs>
+      <router-view/>
     </v-content>
 
     <v-footer app inset class="pa-0 footer_color">
@@ -39,7 +46,7 @@
 
 
 <script>
-import MainContent from "@/components/Content.vue";
+
 import List from "@/components/list.vue";
 import AppBar from "@/components/AppBar.vue";
 
@@ -48,8 +55,7 @@ export default {
 
   components: {
     List,
-    AppBar,
-    MainContent,
+    AppBar,    
   },
 
   data: () => ({
@@ -57,19 +63,23 @@ export default {
       {        
         text: "Sensors",
         icon: "mdi-thermometer-lines",
+        link: "Sensors",
         // bolt camcorder camera-timer cog-transfer consolidate cpu-32-bit home-automation pulse thermometer-lines
       },
       {        
         text: "Charts",
         icon: "mdi-chart-bell-curve",
+        link: "Charts",
       },
       {        
         text: "NotCharts",
         icon: "mdi-chart-bubble",
+        link: "NotCharts",
       },
       {        
         text: "Login",
         icon: "mdi-login-variant",
+        link: "/",
       }
     ], 
 

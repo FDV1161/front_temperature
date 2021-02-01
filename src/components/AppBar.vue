@@ -16,7 +16,7 @@
         <!-- </v-btn> -->
       </v-toolbar-items>
 
-      <v-toolbar-items class="hidden-sm-and-down" v-for="(item, i) in menu" :key="i">
+      <v-toolbar-items class="hidden-sm-and-down" v-for="(item, i) in menu" :key="i" router>
         <v-btn text router :to='item.link'>
           <v-icon left>{{item.icon}}</v-icon>
           <span class="text-capitalize"> {{item.text}} </span>

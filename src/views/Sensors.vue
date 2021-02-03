@@ -6,7 +6,7 @@
           <!-- <h2></h2> -->
           <div text class="d-flex">
             <v-icon left>mdi-thermometer-lines</v-icon>
-            <span class="text-capitalize"> <h2>Sensors</h2> </span>
+            <span class="text-capitalize"> <h2>Sensor: First_sensor</h2> </span>
           </div>
 
           <v-breadcrumbs :items="breadcrumbs" class="pa-0"> </v-breadcrumbs>

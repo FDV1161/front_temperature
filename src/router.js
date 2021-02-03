@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import Home from '@/views/Home.vue'
 import Charts from '@/views/Charts.vue'
 import Sensors from '@/views/Sensors.vue'
-
+import NotCharts from '@/views/NotCharts.vue'
 
 
 Vue.use(Router)
@@ -28,6 +28,11 @@ export default new Router({
             path: '/sensors',
             name: 'Sensors',
             component: Sensors
+        },
+        {            
+            path: '/NotCharts',
+            name: 'NotCharts',
+            component: NotCharts
         }
     ]
 

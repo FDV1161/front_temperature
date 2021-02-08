@@ -13,44 +13,34 @@
         </div>
       </v-col>
     </v-row>
+    
     <v-row class="px-2">
       <v-col><hr /></v-col>
     </v-row>
-    <!-- <v-divider></v-divider> -->
+    
 
-    <v-row class="pt-5">
+    <v-row class="pa-5">
       <v-col>
-        <v-containter>
-          <v-row>
-            <v-col>
-              <v-containter>
-                <v-row align="center">
-                  <v-col class="text-center"
-                    ><h4 class="text-h5">Current readings:</h4></v-col
-                  >
-                  <v-col class="text-center"
-                    ><div class="text-h4">120%</div></v-col
-                  >
-                </v-row>
-              </v-containter>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
-              <MainContent />
-            </v-col>
-          </v-row>
-        </v-containter>
-      </v-col>
+        
+        <div class="chart">
+          <MainContent :chart_data="chart_data" />
+        </div>
+        
+      </v-col>      
+    </v-row>
+    <v-row class="pa-5">
       <v-col>
-        <v-data-table
+          <v-data-table
           :headers="headers"
-          :items="desserts"
+          :items="chart_data"
           :items-per-page="All"
           class="elevation-1"
         ></v-data-table>
       </v-col>
     </v-row>
+
+
+
   </v-conteiner>
   <!-- <v-avatar color="grey lighten-2" size="80" </v-avatar> -->
 </template>
@@ -84,7 +74,7 @@ export default {
       },
       { text: "Value", value: "value" },
     ],
-    desserts: [
+    chart_data: [
       {
         date: "Mon Feb 01 2021 15:24:22",
         value: 159,
@@ -133,5 +123,9 @@ export default {
 <style scoped>
 .my_color {
   /* background: green; */
+}
+
+.chart {
+  height: 300px;
 }
 </style>

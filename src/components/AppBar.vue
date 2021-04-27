@@ -1,9 +1,9 @@
 <template>
-  <v-app-bar dark app :color="color" clipped-left>
-    <v-toolbar flat color="#fff0">
-        
+  <v-app-bar app dense clipped-left color="primary"> <!-- dark :color="color" -->
+    <v-toolbar dense flat color="primary"> <!-- color="#fff0" -->
+      <v-app-bar-nav-icon @click.stop="drawer.side_bar = !drawer.side_bar"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-uppercase">
-        <span class="font-weight-light">Title</span>
+        <span>Title</span> <!-- class="font-weight-light" -->
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -35,7 +35,7 @@
       <v-card>
         <v-toolbar dark flat :color="color" class="px-4">
           <v-toolbar-title class="text-uppercase">
-            <span class="font-weight-light">Title</span>
+            <span>Title</span> <!-- class="font-weight-light" -->
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
@@ -86,5 +86,8 @@ export default {
 <style >
 .icon_width {
     width: 48;
+}
+.menu_bar {
+  z-index: 100;
 }
 </style>

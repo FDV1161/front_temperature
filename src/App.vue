@@ -1,19 +1,23 @@
 <template>
-  <v-app>
-    <v-app-bar app color="orange" clipped-left />
-    <AppBar :color="app_settings.app_color" :drawer="drawer" :menu="menu" />
-    <!-- https://codepen.io/kematzy/pen/zJmXwJ -->
+  <v-app >    
+    <!-- <AppBar :color="app_settings.app_color" :drawer="drawer" :menu="menu" />    
+    <SideBar :app_settings="app_settings" :drawer="drawer" /> -->
 
-    <v-navigation-drawer
+    <AppBar :drawer="drawer" :menu="menu" />    
+    <SideBar :drawer="drawer" />
+
+    <!-- MenuBar
+    SideBar -->
+    <!-- <v-navigation-drawer
       app
       clipped
       :color="app_settings.app_color"
       v-model="drawer.side_bar"
     >
       <List />
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
   
-    <v-content app >
+    <v-content app class="">
       <!-- this.$route.name -->
       <!-- <v-breadcrumbs
         :items="menu"
@@ -24,7 +28,7 @@
       <router-view/>
     </v-content>
 
-    <v-footer app inset class="pa-0 footer_color">
+    <!-- <v-footer app inset class="pa-0 footer_color">
       <v-toolbar dark fluid flat color="#fff0">
         <v-toolbar-items>
         <v-btn icon @click="drawer.side_bar = !drawer.side_bar">
@@ -37,10 +41,8 @@
             <span class="text-capitalize"> Append chart </span>
           </v-btn>
         </v-toolbar-items>
-        
-
       </v-toolbar>
-    </v-footer>
+    </v-footer> -->
   </v-app>
 </template>
 
@@ -49,13 +51,15 @@
 
 import List from "@/components/list.vue";
 import AppBar from "@/components/AppBar.vue";
+import SideBar from "@/components/SideBar.vue";
 
 export default {
   name: "App",
 
   components: {
     List,
-    AppBar,    
+    AppBar,
+    SideBar,    
   },
 
   data: () => ({
@@ -102,9 +106,9 @@ export default {
       side_bar: window.innerWidth > 1264, // in order to not show after a reboots
       nav_bar: false,
     },
-    app_settings: {
-      app_color: "main_color",
-    },
+    // app_settings: {
+    //   app_color: "main_color",
+    // },
   }),
 };
 </script>
@@ -124,6 +128,10 @@ export default {
 .footer_color {
    background: rgb(25,56,115);
   background: linear-gradient(90deg, rgba(25,56,115,1) 0%, rgba(29,55,105,1) 50%, rgba(30,49,86,1) 100%); 
+}
+
+.content_color {
+  background-color: #f9f9f9;
 }
 
 </style>

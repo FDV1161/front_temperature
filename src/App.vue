@@ -1,22 +1,8 @@
 <template>
   <v-app >    
-    <!-- <AppBar :color="app_settings.app_color" :drawer="drawer" :menu="menu" />    
-    <SideBar :app_settings="app_settings" :drawer="drawer" /> -->
-
     <AppBar :drawer="drawer" :menu="menu" />    
     <SideBar :drawer="drawer" />
-
-    <!-- MenuBar
-    SideBar -->
-    <!-- <v-navigation-drawer
-      app
-      clipped
-      :color="app_settings.app_color"
-      v-model="drawer.side_bar"
-    >
-      <List />
-    </v-navigation-drawer> -->
-  
+      
     <v-content app class="">
       <!-- this.$route.name -->
       <!-- <v-breadcrumbs

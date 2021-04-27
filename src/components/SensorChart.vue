@@ -9,7 +9,7 @@
 
 <script>
 import { Line } from "vue-chartjs";
-import List from "@/components/list.vue";
+import List from "@/components/Navigations/List.vue";
 
 let one_data = [
   -25,

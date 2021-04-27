@@ -2,7 +2,7 @@
   <v-app >    
     <AppBar :drawer="drawer" :menu="menu" />    
     <SideBar :drawer="drawer" />
-      
+
     <v-content app class="">
       <!-- this.$route.name -->
       <!-- <v-breadcrumbs
@@ -35,9 +35,9 @@
 
 <script>
 
-import List from "@/components/list.vue";
-import AppBar from "@/components/AppBar.vue";
-import SideBar from "@/components/SideBar.vue";
+import List from "@/components/Navigations/List.vue";
+import AppBar from "@/components/Navigations/AppBar.vue";
+import SideBar from "@/components/Navigations/SideBar.vue";
 
 export default {
   name: "App",

@@ -11,7 +11,7 @@
 
 
 <script>
-import NavigationList from "@/components/list.vue";
+import NavigationList from "@/components/Navigations/List.vue";
 
 export default {
   components: {

@@ -1,6 +1,6 @@
 <template>
-  <v-app-bar app dense clipped-left color="primary"> <!-- dark :color="color" -->
-    <v-toolbar dense flat color="primary"> <!-- color="#fff0" -->
+  <v-app-bar app dense clipped-left color="secondary"> <!-- dark :color="color" -->
+    <v-toolbar dense flat color="secondary"> <!-- color="#fff0" -->
       <v-app-bar-nav-icon @click.stop="drawer.side_bar = !drawer.side_bar"></v-app-bar-nav-icon>
       <v-toolbar-title class="text-uppercase">
         <span>Title</span> <!-- class="font-weight-light" -->

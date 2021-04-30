@@ -1,7 +1,7 @@
 <template>
   <v-list>
     <v-list-item-group>
-      <v-list-item v-for="(item, i) in items.level_0" :key="i" router :to='item.route'>
+      <v-list-item v-for="(item, i) in items.level_0" :key="i" @click="$router.replace({name: item.route})">
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
         </v-list-item-icon>

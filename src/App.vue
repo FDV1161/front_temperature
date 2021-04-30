@@ -3,7 +3,7 @@
     <AppBar :drawer="drawer" :menu="menu" />    
     <SideBar :drawer="drawer" />
 
-    <v-content app class="">
+    <v-main app class="">
       <!-- this.$route.name -->
       <!-- <v-breadcrumbs
         :items="menu"
@@ -12,7 +12,7 @@
 
       </v-breadcrumbs> -->
       <router-view/>
-    </v-content>
+    </v-main>
 
     <!-- <v-footer app inset class="pa-0 footer_color">
       <v-toolbar dark fluid flat color="#fff0">

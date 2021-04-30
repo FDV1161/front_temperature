@@ -14,7 +14,7 @@
     
     
 
-    <v-content 
+    <v-main 
       app            
     >
 
@@ -31,7 +31,7 @@
     </v-toolbar>
     
 
-    </v-content>
+    </v-main>
 
 
     <v-footer

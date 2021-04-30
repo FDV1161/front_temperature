@@ -3,7 +3,7 @@
     app
     clipped    
     v-model="drawer.side_bar"
-    color="primary"
+    color="secondary"
   >
     <NavigationList />
   </v-navigation-drawer>

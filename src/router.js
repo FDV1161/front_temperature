@@ -9,7 +9,7 @@ import RoomsPage from '@/page/Rooms.vue'
 import FunctionsPage from '@/page/Functions.vue'
 import UserGroups from '@/page/UserGroups.vue'
 import Users from '@/page/Users.vue'
-
+import RoomDetailsPage from '@/page/RoomDetailsPage.vue'
 
 Vue.use(Router)
 
@@ -19,38 +19,48 @@ export default new Router({
     routes: [
         {
             path: '/',
-            name: 'Home',
+            name: 'home',
             component: HomePage
         },
         {            
             path: '/rooms',
-            name: 'Rooms',
+            name: 'rooms',
             component: RoomsPage
         },
         {            
+            path: '/rooms/:id',
+            name: 'room-details',
+            component: RoomDetailsPage
+        },
+        {            
             path: '/functions',
-            name: 'Functions',
+            name: 'functions',
             component: FunctionsPage
         },
         {            
             path: '/user-groups',
-            name: 'UserGroups',
+            name: 'user-groups',
             component: UserGroups
         },
         {            
             path: '/users',
-            name: 'Users',
+            name: 'users',
             component: Users
         },
         {
             path: '/charts',
-            name: 'Charts',
+            name: 'charts',
             component: Charts
 
         },
         {
             path: '/sensors',
-            name: 'Sensors',
+            name: 'sensors',
+            component: Sensors
+        },
+        {
+            path: '*',
+            name: 'not-found',
             component: Sensors
         },
     ]

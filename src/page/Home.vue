@@ -1,9 +1,9 @@
 <template>
-  <div class="home">
+  <div class="home">    
     <v-container fluid>
       <v-row>
-        <v-col md="3" v-for="room in this.rooms" :key="room.id" >
-          <Card :data="room" />
+        <v-col md="3" v-for="room in this.rooms" :key="room.id" >          
+          <Card :data="room" />          
         </v-col>
       </v-row>
     </v-container>
@@ -28,7 +28,6 @@ export default {
     LoadRoom: function () {
       api.rooms.getRooms().then((responce) => {
         this.rooms = responce.data;
-        console.log(this.room);
       });
     },
   },

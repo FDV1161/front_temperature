@@ -1,5 +1,5 @@
 <template>
-  <div class="Rooms mt-2">
+  <div class="">
     <v-data-table :headers="headers" :items="rooms" :search="search">
       <template v-slot:top>
         <v-toolbar flat>

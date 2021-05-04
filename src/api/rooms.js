@@ -9,5 +9,12 @@ export default function (instance){
         getSensors(){
             return instance.get('sensors')
         },
+        createRoom(payload){
+            return instance.post('rooms', payload)
+        },
+        // updateRoom(id, payload){
+        //     return instance.post('sensors', payload)
+        // },
+
     }
 }

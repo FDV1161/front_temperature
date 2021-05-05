@@ -50,37 +50,37 @@ export default {
 
   data: () => ({
     menu: [
-      {        
-        text: "Sensors",
-        icon: "mdi-thermometer-lines",
-        link: "Sensors",
-        breadcrumbs: [{
-          text: 'Sensors',
-          disabled: true,
-          href: 'Sensors',
-        }]
-        // bolt camcorder camera-timer cog-transfer consolidate cpu-32-bit home-automation pulse thermometer-lines
-      },
-      {        
-        text: "Charts",
-        icon: "mdi-chart-bell-curve",
-        link: "Charts",
-        breadcrumbs: [{
-          text: 'Charts',
-          disabled: true,
-          href: 'Charts',
-        }]
-      },
-      {        
-        text: "NotCharts",
-        icon: "mdi-chart-bubble",
-        link: "NotCharts",
-        breadcrumbs: [{
-          text: 'NotCharts',
-          disabled: true,
-          href: 'NotCharts',
-        }]
-      },
+      // {        
+      //   text: "Sensors",
+      //   icon: "mdi-thermometer-lines",
+      //   link: "Sensors",
+      //   breadcrumbs: [{
+      //     text: 'Sensors',
+      //     disabled: true,
+      //     href: 'Sensors',
+      //   }]
+      //   // bolt camcorder camera-timer cog-transfer consolidate cpu-32-bit home-automation pulse thermometer-lines
+      // },
+      // {        
+      //   text: "Charts",
+      //   icon: "mdi-chart-bell-curve",
+      //   link: "Charts",
+      //   breadcrumbs: [{
+      //     text: 'Charts',
+      //     disabled: true,
+      //     href: 'Charts',
+      //   }]
+      // },
+      // {        
+      //   text: "NotCharts",
+      //   icon: "mdi-chart-bubble",
+      //   link: "NotCharts",
+      //   breadcrumbs: [{
+      //     text: 'NotCharts',
+      //     disabled: true,
+      //     href: 'NotCharts',
+      //   }]
+      // },
       {        
         text: "Login",
         icon: "mdi-login-variant",

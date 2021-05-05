@@ -77,6 +77,8 @@
       <v-row>
         <v-col>
           <!-- <TableSensors :sensors="[]" /> -->
+           <v-btn color="primary" @click="sensorDialog = true"> Добавить </v-btn>
+          <CreateSensor :dialog="sensorDialog" @close="closeSensorDialog" />
         </v-col>
       </v-row>
       <v-row>
@@ -96,13 +98,16 @@
 <script>
 import api from "@/api/index";
 import TableSensors from "@/components/Rooms/Details/Table.vue";
+import CreateSensor from "@/components/Sensors/Create.vue";
 
 export default {
   components: {
     TableSensors,
+    CreateSensor,
   },
   data() {
     return {
+      sensorDialog: false,
       valid: false,
       sensors: null,
 
@@ -129,6 +134,9 @@ export default {
     },
   },
   methods: {
+    closeSensorDialog () {
+       this.sensorDialog = false;
+    },
     getOnHomeSensors: function () {
       return [
         this.onHomeSensor1,

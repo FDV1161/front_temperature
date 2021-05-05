@@ -14,7 +14,8 @@
           ></v-text-field>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" v-bind="attrs" v-on="on"> Добавить </v-btn>
+              <!-- <v-btn color="primary" v-bind="attrs" v-on="on"> Добавить </v-btn> -->
+              <v-btn color="primary" router to="/create-room"> Добавить </v-btn>
             </template>
             <v-card>
               <v-card-title>

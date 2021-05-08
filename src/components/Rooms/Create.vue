@@ -1,17 +1,17 @@
 <template>
-  <BaseDialog
+  <base-dialog
     :dialog="dialog"
     :valid="valid"
     @close="close"
     @save="save"
-    title="Создание оборудования"
+    title="Создание аудитории"
   >
-    <v-form ref="deviceCreateForm" v-model="valid">
+    <v-form ref="roomCreateForm" v-model="valid">
       <v-container fluid>
         <v-row>
           <v-col>
             <v-text-field
-              v-model="name"
+              v-model.trim="name"
               :rules="[(v) => !!v || 'Обязательное поле']"
               required
             >
@@ -23,25 +23,12 @@
         </v-row>
         <v-row>
           <v-col>
-            <v-text-field
-              v-model="address"
-              :rules="[(v) => !!v || 'Обязательное поле']"
-              required
-            >
-              <template #label>
-                <span class="red--text"><strong>* </strong></span>Адрес
-              </template>
-            </v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
             <v-text-field label="Описание" v-model="description"></v-text-field>
           </v-col>
         </v-row>
       </v-container>
     </v-form>
-  </BaseDialog>
+  </base-dialog>
 </template>
 
 
@@ -57,30 +44,27 @@ export default {
   data() {
     return {
       valid: false,
-      name: null,
-      description: null,
-      address: null,
+
+      name: "",
+      description: "",
     };
   },
-  mounted() {},
   methods: {
     close() {
-      this.$refs.deviceCreateForm.reset();
       this.$emit("close", true);
     },
     save() {
       api.rooms
-        .createDevice({
+        .createRoom({
           name: this.name,
           description: this.description,
-          address: this.address,
         })
         .then((responce) => {
-          this.$refs.deviceCreateForm.reset();
+          this.$refs.roomCreateForm.reset();
           this.$emit("save", responce.data);
         })
-        .catch((err) => {
-          console.log(err.response.data);
+        .catch((error) => {
+          console.log(error.response.data);
           if (error.response) {
             alert(error.response.data);
           } else if (error.request) {
@@ -96,4 +80,7 @@ export default {
 
 
 <style scoped>
+.field-hader {
+  height: 90px;
+}
 </style>

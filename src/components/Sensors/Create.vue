@@ -1,5 +1,5 @@
 <template>
-  <base-dialog :dialog="dialog" :valid="valid" @close="close" @save="save">
+  <base-dialog :dialog="dialog" :valid="valid" @close="close" @save="save" title="Создание датчика">
       <v-form v-model="valid">
         <div v-if="pageLoading"></div>
         <v-container fluid v-else>
@@ -125,7 +125,6 @@ export default {
       description: null,
       address: null,
       measure: null,
-      
     };
   },
   mounted() {

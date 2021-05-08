@@ -12,6 +12,10 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar-items>
+        <template v-if="title">
+          <v-spacer></v-spacer>
+          <v-toolbar-title> {{ title }} </v-toolbar-title>
+        </template>
         <v-spacer></v-spacer>
         <v-toolbar-items>
           <v-btn text @click="save" :disabled="!valid"> Сохранить </v-btn>
@@ -26,7 +30,19 @@
 
 <script>
 export default {
-  props: ["dialog", "valid"],
+  props: {
+    dialog: Boolean,
+    valid: Boolean,
+    title: {
+      default: "",
+      type: String,
+    },
+  },
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+  },
   methods: {
     close() {
       this.$emit("close");

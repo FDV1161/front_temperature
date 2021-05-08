@@ -1,21 +1,5 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    fullscreen
-    hide-overlay
-    transition="dialog-bottom-transition"
-  >
-    <v-card>
-      <v-toolbar dark dense color="primary">
-        <v-btn icon dark @click="close">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-toolbar-items>
-          <v-btn text v-on:click="save" :disabled="!valid"> Сохранить </v-btn>
-        </v-toolbar-items>
-      </v-toolbar>
-
+  <base-dialog :dialog="dialog" :valid="valid" @close="close" @save="save">
       <v-form v-model="valid">
         <div v-if="pageLoading"></div>
         <v-container fluid v-else>
@@ -55,7 +39,8 @@
                 menu-props="auto"
                 label="Физическая величина"
                 item-value="key"
-                item-text="name"
+                item-text="name"                
+                v-model="measure"
                 clearable
               ></v-select>
             </v-col>
@@ -72,11 +57,11 @@
                   v-model="deviceSelect"
                   clearable
                 ></v-select>
-                <v-btn icon fab tile @click="deviceDialog=true">
-                  <v-icon >mdi-plus</v-icon>
+                <v-btn icon min-height="48" min-width="48" tile @click="deviceDialog=true">
+                  <v-icon dark>mdi-plus</v-icon>
                 </v-btn>
               </div>
-              <CreateDevice :dialog="deviceDialog" @close="deviceDialogClose" @save="deviceDialogSave" />
+              <create-device :dialog="deviceDialog" @close="deviceDialogClose" @save="deviceDialogSave" />
             </v-col>
           </v-row>
           <v-expand-transition>
@@ -113,18 +98,20 @@
         </v-container>
       </v-form>
     </v-card>
-  </v-dialog>
+  </base-dialog>
 </template>
 
 
 <script>
 import api from "@/api/index";
 import CreateDevice from "@/components/Device/Create.vue";
+import BaseDialog from "@/components/Base/Dialog.vue";
 
 export default {
   props: ["dialog"],
   components: {
     CreateDevice,
+    BaseDialog,
   },
   data() {
     return {
@@ -132,12 +119,13 @@ export default {
       valid: false,
       measures: null,
       devices: null,
+      deviceSelect: null,
 
       name: null,
       description: null,
       address: null,
       measure: null,
-      deviceSelect: null,
+      
     };
   },
   mounted() {
@@ -161,13 +149,13 @@ export default {
   },
 
   methods: {
-    deviceDialogSave(device){
-        this.deviceSelect = device.id;
-        this.devices.push(device);
-        this.deviceDialog = false;
+    deviceDialogSave(device) {
+      this.deviceSelect = device.id;
+      this.devices.push(device);
+      this.deviceDialog = false;
     },
-    deviceDialogClose(){
-        this.deviceDialog = false;
+    deviceDialogClose() {
+      this.deviceDialog = false;
     },
     loadMeasures() {
       api.rooms.getMeasures().then((responce) => {

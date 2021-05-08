@@ -72,23 +72,26 @@
       <v-row>
         <v-col class="d-flex align-center field-hader">
           <span>Список датчиков</span>
+          <v-spacer></v-spacer>
+          <v-btn icon tile min-height="48" min-width="48" @click="sensorsClickAdd">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <!-- <TableSensors :sensors="[]" /> -->
-           <v-btn color="primary" @click="sensorDialog = true"> Добавить </v-btn>
+          <TableSensors :sensors="[]" @clickAdd="sensorsClickAdd" />
           <CreateSensor :dialog="sensorDialog" @close="closeSensorDialog" />
         </v-col>
       </v-row>
       <v-row>
         <v-col class="d-flex justify-end">
-           <v-btn color="primary" class="mr-2" @click="$router.go(-1)" >
+          <v-btn color="primary" class="mr-2" @click="$router.go(-1)">
             Отмена
           </v-btn>
           <v-btn color="primary" v-on:click="createRoom" :disabled="!valid">
             Сохранить
-          </v-btn>          
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -134,8 +137,11 @@ export default {
     },
   },
   methods: {
-    closeSensorDialog () {
-       this.sensorDialog = false;
+    sensorsClickAdd() {
+      this.sensorDialog = true;
+    },
+    closeSensorDialog() {
+      this.sensorDialog = false;
     },
     getOnHomeSensors: function () {
       return [

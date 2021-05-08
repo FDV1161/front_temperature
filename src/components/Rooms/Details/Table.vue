@@ -1,20 +1,11 @@
 <template>
-  <div class="">     
-    <v-data-table :headers="headers" :items="sensorsDataTable" :search="search">
-      <template v-slot:top>        
-        <v-toolbar flat>          
-          <v-spacer></v-spacer>
-          <v-text-field            
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Поиск"
-            hide-details
-            class="mr-5"
-          ></v-text-field>
-          <v-btn color="primary" v-bind="attrs" v-on="on"> Добавить </v-btn>          
-        </v-toolbar>
-      </template>
-      
+  <div>     
+    <v-data-table 
+      :headers="headers" 
+      :items="sensorsDataTable" 
+      :search="search"      
+      hide-default-footer
+      >      
       <template v-slot:no-data>
         <div>Список датчиков пуст</div>
       </template>
@@ -26,7 +17,7 @@
 
 <script>
 export default {
-  props: ["sensors"],
+  props: ["sensors", "dialog"],
   data: () => ({    
     search: "",
     headers: [
@@ -61,6 +52,11 @@ export default {
       }));
     },    
   },
+  methods:{
+    clickAdd(){
+      this.$emit("clickAdd");
+    }
+  }
 };
 </script>
 

@@ -1,29 +1,33 @@
-export default function (instance){
+export default function (instance) {
     return {
-        getRooms(){
+        getRooms() {
             return instance.get('rooms')
         },
-        getRoom(payload){
+        getRoom(payload) {
             return instance.get('rooms/' + payload)
         },
-        getSensors(){
+        getSensors() {
             return instance.get('sensors')
         },
-        createRoom(payload){
+        createRoom(payload) {
             return instance.post('rooms', payload)
         },
-        createSensor(payload){
+        deleteRoom(payload) {
+            return instance.delete('rooms/' + payload)
+        },
+        createSensor(payload) {
             return instance.post('rooms', payload)
         },
-        getMeasures(){
+        getMeasures() {
             return instance.get('measures')
         },
-        getDevices(){
+        getDevices() {
             return instance.get('devices')
         },
-        createDevice(payload){
+        createDevice(payload) {
             return instance.post('devices', payload)
         }
+
 
         // updateRoom(id, payload){
         //     return instance.post('sensors', payload)

@@ -2,7 +2,13 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-data-table :headers="headers" :items="rooms" :search="search">
+        <v-data-table
+          :headers="headers"
+          :items="rooms"
+          :search="search"
+          hide-default-footer
+          disable-pagination
+        >
           <template v-slot:top>
             <v-toolbar flat>
               <v-toolbar-title>Список аудиторий</v-toolbar-title>
@@ -14,15 +20,21 @@
                 hide-details
                 class="mr-5"
               ></v-text-field>
-              <v-btn icon tile router @click="dialog = true">
+              <v-btn icon tile router @click="openRoomDialog">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
               <create-room-modal
-                :dialog="dialog"
-                @close="closeRoomModal"
-                @save="saveRoomModal"
+                :dialog="dialogs.create"
+                @close="closeRoomDialog"
+                @save="appendRoom"
               />
             </v-toolbar>
+            <delete-dialog
+              :dialog="dialogs.delete"
+              :name="deleteName"
+              @close="closeDeleteDialog"
+              @ok="deleteRoom"
+            />
           </template>
 
           <template v-slot:item.name="{ item }">
@@ -38,7 +50,7 @@
             <v-icon small class="mr-2" @click="editItem(item)">
               mdi-pencil
             </v-icon>
-            <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
+            <v-icon small @click="choiceRoom(item)"> mdi-delete </v-icon>
           </template>
 
           <template v-slot:no-data>
@@ -55,15 +67,21 @@
 <script>
 import api from "@/api/index";
 import CreateRoomModal from "@/components/Rooms/Create.vue";
+import DeleteDialog from "@/components/Base/DeleteDialog.vue";
 
 export default {
   components: {
     CreateRoomModal,
+    DeleteDialog,
   },
   data: () => ({
     rooms: [],
     search: "",
-    dialog: false,
+    dialogs: {
+      create: false,
+      delete: false,
+    },
+    activeRoom: null,
     headers: [
       {
         text: "Название",
@@ -80,7 +98,14 @@ export default {
     ],
   }),
 
-  computed: {},
+  computed: {
+    deleteName() {
+      if (this.activeRoom) {
+        return this.activeRoom.name;
+      }
+      return "";
+    },
+  },
 
   mounted() {
     this.LoadRooms();
@@ -92,14 +117,54 @@ export default {
         this.rooms = responce.data;
       });
     },
-    closeRoomModal() {
-      this.dialog = false;
-    },
-    saveRoomModal(data) {
-      console.log(data);
 
-      this.rooms.push(data);
-      this.closeRoomModal();
+    
+
+    choiceRoom(room) {
+      this.activeRoom = room;
+      this.openDeleteDialog();
+    },
+
+    spliceRooms(){
+      // TODO переделать? 
+      if (this.activeRoom){
+        this.rooms.splice(this.rooms.indexOf(this.activeRoom), 1);
+        this.activeRoom = null;
+      }      
+    },
+    appendRoom(room) {      
+      this.rooms.push(room);
+      this.closeRoomDialog();
+    },
+    deleteRoom() {
+      api.rooms
+        .deleteRoom(this.activeRoom.id)
+        .then((responce) => {
+          this.spliceRooms();
+          this.closeDeleteDialog();
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          if (error.response) {
+            alert(error.response.data);
+          } else if (error.request) {
+            alert(error.request);
+          } else {
+            alert("Error", error.message);
+          }
+        });
+    },
+    openRoomDialog(){
+      this.dialogs.create = true;
+    },
+    openDeleteDialog(){
+      this.dialogs.delete = true;
+    },
+    closeRoomDialog() {
+      this.dialogs.create = false;
+    },
+    closeDeleteDialog() {
+      this.dialogs.delete = false;
     },
   },
 };

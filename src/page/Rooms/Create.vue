@@ -12,7 +12,7 @@
       <v-row>
         <v-col>
           <v-text-field
-            v-model:value="name"
+            v-model="room.name"
             :rules="[(v) => !!v || 'Обязательное поле']"
             required
           >
@@ -26,79 +26,8 @@
         <v-col>
           <v-text-field
             label="Описание"
-            v-model:value="description"
+            v-model="room.description"
           ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="8" class="d-flex align-center">
-          <span>Показывать на главном экране</span>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="4" class="d-flex justify-end">
-          <v-switch v-model="onHome"></v-switch>
-        </v-col>
-      </v-row>
-      <v-expand-transition>
-        <v-row v-show="onHome" class="pt-0">
-          <v-col>
-            <v-select
-              :items="listSensorsName"
-              menu-props="auto"
-              label="Датчик"
-              item-value="key"
-              item-text="name"
-              v-model="onHomeSensor1"
-              clearable
-            ></v-select>
-          </v-col>
-          <v-col>
-            <v-select
-              :items="listSensorsName"
-              menu-props="auto"
-              label="Датчик"
-              item-value="key"
-              item-text="name"
-              v-model="onHomeSensor2"
-              clearable
-            ></v-select>
-          </v-col>
-          <v-col>
-            <v-select
-              :items="listSensorsName"
-              menu-props="auto"
-              label="Датчик"
-              item-value="key"
-              item-text="name"
-              v-model="onHomeSensor3"
-              clearable
-            ></v-select>
-          </v-col>
-        </v-row>
-      </v-expand-transition>
-      <v-row>
-        <v-col class="d-flex align-center field-hader">
-          <span>Список датчиков</span>
-          <v-spacer></v-spacer>
-          <v-btn
-            icon
-            tile
-            min-height="48"
-            min-width="48"
-            @click="sensorsClickAdd"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <TableSensors :sensors="sensors" @clickAdd="sensorsClickAdd" />
-          <CreateSensor
-            :dialog="sensorDialog"
-            @close="closeSensorDialog"
-            @save="addSensor"
-          />
         </v-col>
       </v-row>
     </v-container>
@@ -107,96 +36,26 @@
 
 <script>
 import api from "@/api/index";
-import TableSensors from "@/components/Rooms/Details/Table.vue";
-import CreateSensor from "@/components/Sensors/Create.vue";
 
 export default {
-  components: {
-    TableSensors,
-    CreateSensor,
-  },
   data() {
     return {
-      sensorDialog: false,
       valid: false,
-      sensors: [],
-
-      name: null,
-      description: null,
-      onHome: false,
-      onHomeSensor1: null,
-      onHomeSensor2: null,
-      onHomeSensor3: null,
+      room: {
+        name: "",
+        description: "",
+      },
     };
   },
-  mounted() {},
-  computed: {
-    listSensorsName() {
-      return this.sensors.map((s) => ({
-        key: s.id,
-        name: s.name,
-      }));
-    },
-  },
   methods: {
-    addSensor(sensor) {
-      this.sensors.push(sensor);
-      this.closeSensorDialog();
-    },
-    sensorsClickAdd() {
-      this.sensorDialog = true;
-    },
-    closeSensorDialog() {
-      this.sensorDialog = false;
-    },
-    getOnHomeSensors: function () {
-      return [
-        this.onHomeSensor1,
-        this.onHomeSensor2,
-        this.onHomeSensor3,
-      ].filter((v) => v !== null);
-    },
-    createSensors(room) {
-      this.sensors.forEach((sensor) => {        
-        const payload = {
-          name: sensor.name,
-          description: sensor.description,
-          measure_id: sensor.measure != null ? sensor.measure.id : null,
-          room_id: room.id,        
-        }
-        //  = { ...sensor, room_id: room.id };        
-        api.rooms
-          .createSensor(payload)
-          .then((responce) => {
-            console.log(responce);
-          })
-          .catch((error) => {
-            // console.log(error.response.data);
-            if (error.response) {
-              alert(error.response.data);
-            } else if (error.request) {
-              alert(error.request);
-            } else {
-              alert("Error", error.message);
-            }
-          });
-      });
-    },
     createRoom: function () {
-      var payload = {
-        name: this.name,
-        description: this.description,
-        sensor_one_id: this.onHomeSensor1,
-        sensor_two_id: this.onHomeSensor2,
-        sensor_free_id: this.onHomeSensor3,
-        on_home: this.onHome,
-      };
-      console.log(payload);
       api.rooms
-        .createRoom(payload)
+        .createRoom(this.room)
         .then((responce) => {
-          console.log(responce);
-          this.createSensors(responce.data);
+          this.$router.push({
+            name: "edit-room",
+            params: { id: responce.data.id },
+          });
         })
         .catch((error) => {
           // console.log(error.response.data);

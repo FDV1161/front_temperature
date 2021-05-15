@@ -18,7 +18,7 @@
         </template>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn text @click="save" :disabled="!valid"> Сохранить </v-btn>
+          <v-btn text @click="save" :disabled="!valid"> {{saveTitle}} </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <slot> </slot>
@@ -37,6 +37,10 @@ export default {
       default: "",
       type: String,
     },
+    saveTitle: {
+      default: "Сохранить",
+      type: String,
+    }
   },
   watch: {
     dialog(val) {

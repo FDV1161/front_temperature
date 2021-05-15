@@ -16,7 +16,7 @@ export default function (instance) {
             return instance.delete('rooms/' + payload)
         },
         createSensor(payload) {
-            return instance.post('rooms', payload)
+            return instance.post('sensors', payload)
         },
         getMeasures() {
             return instance.get('measures')

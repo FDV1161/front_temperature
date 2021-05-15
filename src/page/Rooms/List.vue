@@ -20,7 +20,10 @@
                 hide-details
                 class="mr-5"
               ></v-text-field>
-              <v-btn icon tile router @click="openRoomDialog">
+              <!-- <v-btn icon tile router @click="openRoomDialog">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn> -->
+              <v-btn icon tile router to="/create-room">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
               <create-room-modal
@@ -47,10 +50,19 @@
           </template>
 
           <template v-slot:item.actions="{ item }">
-            <v-icon small class="mr-2" @click="editItem(item)">
-              mdi-pencil
-            </v-icon>
-            <v-icon small @click="choiceRoom(item)"> mdi-delete </v-icon>
+            <div class="d-flex">
+              <v-btn
+                icon
+                small
+                router
+                :to="{ name: 'edit-room', params: { id: item.id } }"
+              >
+                <v-icon small> mdi-pencil </v-icon>
+              </v-btn>
+              <v-btn icon small @click="choiceDeleteRoom(item)">
+                <v-icon small> mdi-delete </v-icon>
+              </v-btn>
+            </div>
           </template>
 
           <template v-slot:no-data>
@@ -118,21 +130,19 @@ export default {
       });
     },
 
-    
-
-    choiceRoom(room) {
+    choiceDeleteRoom(room) {
       this.activeRoom = room;
       this.openDeleteDialog();
     },
 
-    spliceRooms(){
-      // TODO переделать? 
-      if (this.activeRoom){
+    spliceRooms() {
+      // TODO переделать?
+      if (this.activeRoom) {
         this.rooms.splice(this.rooms.indexOf(this.activeRoom), 1);
         this.activeRoom = null;
-      }      
+      }
     },
-    appendRoom(room) {      
+    appendRoom(room) {
       this.rooms.push(room);
       this.closeRoomDialog();
     },
@@ -154,10 +164,10 @@ export default {
           }
         });
     },
-    openRoomDialog(){
+    openRoomDialog() {
       this.dialogs.create = true;
     },
-    openDeleteDialog(){
+    openDeleteDialog() {
       this.dialogs.delete = true;
     },
     closeRoomDialog() {

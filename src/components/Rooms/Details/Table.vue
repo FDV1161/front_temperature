@@ -1,11 +1,11 @@
 <template>
-  <div>     
-    <v-data-table 
-      :headers="headers" 
-      :items="sensorsDataTable" 
-      :search="search"      
+  <div>
+    <v-data-table
+      :headers="headers"
+      :items="sensorsDataTable"
+      :search="search"
       hide-default-footer
-      >      
+    >
       <template v-slot:no-data>
         <div>Список датчиков пуст</div>
       </template>
@@ -16,47 +16,34 @@
 
 
 <script>
+import { headers } from "@/components/Rooms/Details/Data.js";
+
 export default {
   props: ["sensors", "dialog"],
-  data: () => ({    
+  data: () => ({
     search: "",
-    headers: [
-      {
-        text: "Название датчика",
-        align: "start",
-        value: "name",
-      },
-      {
-        text: "Адрес",
-        align: "start",
-        value: "address",
-      },
-      {
-        text: "Мера",
-        align: "start",
-        value: "measure",
-      },      
-      {
-        text: "Тип датчика",
-        align: "start",
-        value: "type",
-      },      
-    ],
+    headers: headers,
   }),
   computed: {
-    sensorsDataTable () {
-      return this.sensors.map(s => ({
+    sensorsDataTable() {
+      return this.sensors.map((s) => ({
         name: s.name,
         address: s.address,
-        measure: `${s.measure.name} (${s.measure.symbol})`,
+        measure: this.getMeasureName(s),
       }));
-    },    
+    },
   },
-  methods:{
-    clickAdd(){
+  methods: {
+    getMeasureName(sensor) {
+      if (sensor.measure != null) {
+        return `${sensor.measure.name} (${sensor.measure.symbol})`;
+      }
+      return "";
+    },
+    clickAdd() {
       this.$emit("clickAdd");
-    }
-  }
+    },
+  },
 };
 </script>
 

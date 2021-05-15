@@ -1,9 +1,12 @@
 <template>
   <v-form v-model="valid">
-    <v-container fluid>
+    <div v-if="pageIsLoad"></div>
+    <v-container fluid v-else>
       <v-row>
         <v-col class="d-flex justify-end">
-          <v-btn class="mr-2" @click="$router.go(-1)"> Отмена </v-btn>
+          <v-btn  class="mr-2" @click="$router.go(-1)">
+            Отмена
+          </v-btn>
           <v-btn color="primary" v-on:click="createRoom" :disabled="!valid">
             Сохранить
           </v-btn>
@@ -80,13 +83,7 @@
         <v-col class="d-flex align-center field-hader">
           <span>Список датчиков</span>
           <v-spacer></v-spacer>
-          <v-btn
-            icon
-            tile
-            min-height="48"
-            min-width="48"
-            @click="sensorsClickAdd"
-          >
+          <v-btn icon tile min-height="48" min-width="48" @click="sensorsClickAdd">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-col>
@@ -94,13 +91,10 @@
       <v-row>
         <v-col>
           <TableSensors :sensors="sensors" @clickAdd="sensorsClickAdd" />
-          <CreateSensor
-            :dialog="sensorDialog"
-            @close="closeSensorDialog"
-            @save="addSensor"
-          />
+          <CreateSensor :dialog="sensorDialog" @close="closeSensorDialog" />
         </v-col>
       </v-row>
+      
     </v-container>
   </v-form>
 </template>
@@ -119,7 +113,7 @@ export default {
     return {
       sensorDialog: false,
       valid: false,
-      sensors: [],
+      sensors: null,
 
       name: null,
       description: null,
@@ -129,7 +123,10 @@ export default {
       onHomeSensor3: null,
     };
   },
-  mounted() {},
+  mounted() {
+    this.loadSensors();
+    this.loadRoom();
+  },
   computed: {
     listSensorsName() {
       return this.sensors.map((s) => ({
@@ -137,11 +134,21 @@ export default {
         name: s.name,
       }));
     },
+    pageIsLoad() {
+      return !this.sensors;
+    },
   },
   methods: {
-    addSensor(sensor) {
-      this.sensors.push(sensor);
-      this.closeSensorDialog();
+    loadRoom: function () {
+      api.rooms.getRoom(this.$route.params.id).then((responce) => {
+        this.room = responce.data;
+        this.name = responce.data.name;
+        this.description = responce.data.description;
+        this.onHome = responce.data.on_home;
+        this.onHomeSensor1 = responce.data.sensor_list[0] || null;
+        this.onHomeSensor2 = responce.data.sensor_list[1] || null;
+        this.onHomeSensor3 = responce.data.sensor_list[2] || null;
+      });
     },
     sensorsClickAdd() {
       this.sensorDialog = true;
@@ -156,58 +163,21 @@ export default {
         this.onHomeSensor3,
       ].filter((v) => v !== null);
     },
-    createSensors(room) {
-      this.sensors.forEach((sensor) => {        
-        const payload = {
-          name: sensor.name,
-          description: sensor.description,
-          measure_id: sensor.measure != null ? sensor.measure.id : null,
-          room_id: room.id,        
-        }
-        //  = { ...sensor, room_id: room.id };        
-        api.rooms
-          .createSensor(payload)
-          .then((responce) => {
-            console.log(responce);
-          })
-          .catch((error) => {
-            // console.log(error.response.data);
-            if (error.response) {
-              alert(error.response.data);
-            } else if (error.request) {
-              alert(error.request);
-            } else {
-              alert("Error", error.message);
-            }
-          });
+    loadSensors: function () {
+      api.rooms.getSensors().then((responce) => {
+        this.sensors = responce.data;
       });
     },
     createRoom: function () {
       var payload = {
         name: this.name,
         description: this.description,
-        sensor_one_id: this.onHomeSensor1,
-        sensor_two_id: this.onHomeSensor2,
-        sensor_free_id: this.onHomeSensor3,
         on_home: this.onHome,
+        sensor_list: this.getOnHomeSensors(),
       };
-      console.log(payload);
-      api.rooms
-        .createRoom(payload)
-        .then((responce) => {
-          console.log(responce);
-          this.createSensors(responce.data);
-        })
-        .catch((error) => {
-          // console.log(error.response.data);
-          if (error.response) {
-            alert(error.response.data);
-          } else if (error.request) {
-            alert(error.request);
-          } else {
-            alert("Error", error.message);
-          }
-        });
+      api.rooms.createRoom(payload).then((responce) => {
+        console.log(responce);
+      });
     },
   },
 };

@@ -1,10 +1,23 @@
 <template>
-  <div class="room-details">     
+  <div class="room-details">
     <div v-if="pageIsLoad"></div>
     <v-container fluid v-else>
       <v-row>
         <v-col>
-          <v-text-field label="Название" :value="room.name"></v-text-field>
+          <v-text-field
+            label="Идентификатор"
+            :value="room.id"
+            readonly
+          ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-text-field
+            label="Название"
+            :value="room.name"
+            readonly
+          ></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -12,12 +25,8 @@
           <v-text-field
             label="Описание"
             :value="room.description"
+            readonly
           ></v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-text-field label="Идентификатор" :value="room.id"></v-text-field>
         </v-col>
       </v-row>
       <v-row>
@@ -26,12 +35,10 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="4" class="d-flex justify-end">
-          <v-switch
-             v-model="onHomeSwith"             
-          ></v-switch>
+          <v-switch v-model="room.on_home" readonly></v-switch>
         </v-col>
       </v-row>
-      <v-expand-transition>
+      <!-- <v-expand-transition>
       <v-row v-show="onHomeSwith" class="pt-0">
         <v-col>
           <v-select
@@ -55,21 +62,20 @@
           ></v-select>
         </v-col>
       </v-row>
-      </v-expand-transition>    
+      </v-expand-transition>     -->
       <v-row>
         <v-col class="d-flex align-center field-hader">
-          <span >Список датчиков</span>
+          <span>Список датчиков</span>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <TableSensors :sensors="room.sensor_list" />
-        </v-col>        
+        </v-col>
       </v-row>
       <v-row>
         <v-col class="d-flex justify-end">
-          <v-btn color="" v-bind="attrs" v-on="on" class="mr-5"> Отмена </v-btn>
-          <v-btn color="primary" v-bind="attrs" v-on="on"> Сохранить </v-btn>
+          <v-btn color="" class="mr-5" @click="$router.go(-1)"> назад </v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -78,47 +84,31 @@
 
 <script>
 import api from "@/api/index";
-import TableSensors from "@/components/Rooms/Details/Table.vue"
+import TableSensors from "@/components/Rooms/Details/Table.vue";
 
 export default {
   components: {
-    TableSensors
+    TableSensors,
   },
   data() {
     return {
       room: null,
-      sensors: null,
-      onHomeSwith: true,
     };
-  },  
+  },
   mounted() {
     this.loadRoom();
-    this.loadSensors();
   },
   computed: {
-    listSensorsName () {
-      return this.sensors.map(s => s.name);
-    },
     pageIsLoad() {
-      return !(this.room && this.sensors)
-    }
+      return !this.room;
+    },
   },
-  methods: {    
+  methods: {
     loadRoom: function () {
       api.rooms.getRoom(this.$route.params.id).then((responce) => {
         this.room = responce.data;
       });
     },
-    loadSensors: function () {
-      api.rooms.getSensors().then((responce) => {
-        this.sensors = responce.data;
-      });
-    },
-    createRoom: function(){
-      // api.rooms.createRoom(this.room).then((responce)=>{
-      //   console.log(responce);
-      // })
-    }
   },
 };
 </script>

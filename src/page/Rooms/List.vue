@@ -8,6 +8,7 @@
           :search="search"
           hide-default-footer
           disable-pagination
+          mobile-breakpoint="0"
         >
           <template v-slot:top>
             <v-toolbar flat>
@@ -101,7 +102,7 @@ export default {
         value: "name",
       },
       {
-        text: "Actions",
+        text: "",
         value: "actions",
         align: "start",
         width: "80px",

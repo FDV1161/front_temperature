@@ -30,6 +30,9 @@ export default function (instance) {
         updateRoom(payload) {
             return instance.put('rooms/' + payload.id, payload)
         },
+        deleteSensor(payload){
+            return instance.delete('sensors/' + payload)
+        },
 
     }
 }

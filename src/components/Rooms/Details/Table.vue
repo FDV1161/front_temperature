@@ -5,7 +5,19 @@
       :items="sensorsDataTable"
       :search="search"
       hide-default-footer
+      mobile-breakpoint="0"
     >
+      <template v-slot:item.actions="{ item }">
+        <div class="d-flex">
+          <v-btn icon small>
+            <v-icon small @click="editClick(item)"> mdi-pencil </v-icon>
+          </v-btn>
+          <v-btn icon small @click="deleteClick(item)">
+            <v-icon small> mdi-delete </v-icon>
+          </v-btn>
+        </div>
+      </template>
+
       <template v-slot:no-data>
         <div>Список датчиков пуст</div>
       </template>
@@ -27,6 +39,7 @@ export default {
   computed: {
     sensorsDataTable() {
       return this.sensors.map((s) => ({
+        id: s.id,
         name: s.name,
         address: s.address,
         measure: this.getMeasureName(s),
@@ -40,8 +53,11 @@ export default {
       }
       return "";
     },
-    clickAdd() {
-      this.$emit("clickAdd");
+    deleteClick(item) {
+      this.$emit("deleteClick", item);
+    },
+    editClick() {
+      this.$emit("editClick", item);
     },
   },
 };

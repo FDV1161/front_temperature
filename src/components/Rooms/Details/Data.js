@@ -15,9 +15,11 @@ const headers = [
         value: "measure",
     },
     {
-        text: "Тип датчика",
+        text: "",
         align: "start",
-        value: "type",
+        value: "actions",
+        width: "80px",
+        sortable: false,
     },
 ];
 

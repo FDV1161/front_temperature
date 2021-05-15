@@ -8,12 +8,11 @@
     saveTitle="Добавить"
   >
     <v-form ref="sensorCreateForm" v-model="valid">
-      <div v-if="pageLoading"></div>
-      <v-container fluid v-else>
+      <v-container fluid>
         <v-row>
           <v-col>
             <v-text-field
-              v-model:value="name"
+              v-model="sensor.name"
               :rules="[(v) => !!v || 'Обязательное поле']"
               required
             >
@@ -27,24 +26,24 @@
           <v-col>
             <v-text-field
               label="Описание"
-              v-model:value="description"
+              v-model="sensor.description"
             ></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <v-text-field label="Адрес" v-model:value="address"></v-text-field>
+            <v-text-field label="Адрес" v-model="sensor.address"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
             <v-select
-              :items="measuresSelected"
+              :items="measureList"
               menu-props="auto"
               label="Физическая величина"
-              item-value="key"
-              item-text="name"
-              v-model="measure"
+              item-value="id"
+              item-text="full_name"
+              v-model="sensor.measureId"
               clearable
             ></v-select>
           </v-col>
@@ -53,12 +52,12 @@
           <v-col>
             <div class="d-flex">
               <v-select
-                :items="devices"
+                :items="deviceList"
                 menu-props="auto"
                 label="Оборудование"
                 item-value="id"
                 item-text="name"
-                v-model="deviceSelect"
+                v-model="sensor.deviceId"
                 clearable
               ></v-select>
               <v-btn
@@ -79,7 +78,7 @@
           </v-col>
         </v-row>
         <v-expand-transition>
-          <v-row v-show="deviceSelect">
+          <v-row v-show="sensor.deviceId">
             <v-container fluid class="mx-2 elevation-1">
               <v-row>
                 <v-col>
@@ -130,14 +129,24 @@ export default {
     return {
       deviceDialog: false,
       valid: false,
-      measures: null,
-      devices: null,
-      deviceSelect: null,
 
-      name: null,
-      description: null,
-      address: null,
-      measure: null,
+      deviceList: [],
+      measureList: [],
+
+      device: {
+        name: "",
+        description: "",
+        address: null,
+      },
+
+      sensor: {
+        roomId: this.$route.params.id,
+        name: "",
+        description: "",
+        address: null,
+        measureId: null,
+        deviceId: null,
+      },
     };
   },
   mounted() {
@@ -145,44 +154,34 @@ export default {
     this.loadDevices();
   },
 
-  computed: {
-    measuresSelected() {
-      return this.measures.map((m, index) => ({
-        key: index,
-        name: `${m.name} (${m.symbol})`,
-      }));
-    },
-    pageLoading() {
-      return !(this.devices && this.measures);
-    },
-    device() {
-      var base_device = {
-        id: "",
-        name: "",
-        description: "",
-        address: "",
-      };
-      return this.devices.find((d) => d.id == this.deviceSelect) || base_device;
+  watch: {
+    "sensor.deviceId": function (new_val) {
+      if (new_val) {
+        this.device = this.deviceList.find((d) => d.id == new_val);
+      }
     },
   },
 
   methods: {
     deviceDialogSave(device) {
-      this.deviceSelect = device.id;
-      this.devices.push(device);
-      this.deviceDialog = false;
+      this.deviceList.push(device);
+      this.sensor.deviceId = device.id;
+      this.deviceDialogClose();
     },
     deviceDialogClose() {
       this.deviceDialog = false;
     },
     loadMeasures() {
       api.rooms.getMeasures().then((responce) => {
-        this.measures = responce.data;
+        this.measureList = responce.data.map((m) => ({
+          ...m,
+          full_name: `${m.name} (${m.symbol})`,
+        }));
       });
     },
     loadDevices() {
       api.rooms.getDevices().then((responce) => {
-        this.devices = responce.data;
+        this.deviceList = responce.data;
       });
     },
     close() {
@@ -190,14 +189,22 @@ export default {
       this.$emit("close");
     },
     save() {
-      this.$emit("save", {
-        name: this.name,
-        description: this.description,
-        address: this.address,
-        measure: this.measures[this.measure],
-        device: this.deviceSelect,
-      });
-      this.$refs.sensorCreateForm.reset();
+      api.rooms
+        .createSensor(this.sensor)
+        .then((responce) => {
+          this.$refs.sensorCreateForm.reset();
+          this.$emit("save", responce.data);
+        })
+        .catch((error) => {
+          console.log(error.response.data);
+          if (error.response) {
+            alert(error.response.data);
+          } else if (error.request) {
+            alert(error.request);
+          } else {
+            alert("Error", error.message);
+          }
+        });
     },
   },
 };

@@ -1,13 +1,12 @@
 <template>
-  <v-form v-model="valid">
-    <div v-if="pageIsLoad"></div>
-    <v-container fluid v-else>
+  <v-form v-model="valid">    
+    <v-container fluid>
       <v-row>
         <v-col class="d-flex justify-end">
           <v-btn  class="mr-2" @click="$router.go(-1)">
             Отмена
           </v-btn>
-          <v-btn color="primary" v-on:click="createRoom" :disabled="!valid">
+          <v-btn color="primary" v-on:click="updateRoom" :disabled="!valid">
             Сохранить
           </v-btn>
         </v-col>
@@ -15,7 +14,7 @@
       <v-row>
         <v-col>
           <v-text-field
-            v-model:value="name"
+            v-model="room.name"
             :rules="[(v) => !!v || 'Обязательное поле']"
             required
           >
@@ -29,7 +28,7 @@
         <v-col>
           <v-text-field
             label="Описание"
-            v-model:value="description"
+            v-model="room.description"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -39,41 +38,41 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="4" class="d-flex justify-end">
-          <v-switch v-model="onHome"></v-switch>
+          <v-switch v-model="room.onHome"></v-switch>
         </v-col>
       </v-row>
       <v-expand-transition>
-        <v-row v-show="onHome" class="pt-0">
+        <v-row v-show="room.onHome" class="pt-0">
           <v-col>
             <v-select
-              :items="listSensorsName"
+              :items="room.sensorList"
               menu-props="auto"
               label="Датчик"
-              item-value="key"
+              item-value="id"
               item-text="name"
-              v-model="onHomeSensor1"
+              v-model="room.sensorOneId"
               clearable
             ></v-select>
           </v-col>
           <v-col>
             <v-select
-              :items="listSensorsName"
+              :items="room.sensorList"
               menu-props="auto"
               label="Датчик"
-              item-value="key"
+              item-value="id"
               item-text="name"
-              v-model="onHomeSensor2"
+              v-model="room.sensorTwoId"
               clearable
             ></v-select>
           </v-col>
           <v-col>
             <v-select
-              :items="listSensorsName"
+              :items="room.sensorList"
               menu-props="auto"
               label="Датчик"
-              item-value="key"
+              item-value="id"
               item-text="name"
-              v-model="onHomeSensor3"
+              v-model="room.sensorFreeId"
               clearable
             ></v-select>
           </v-col>
@@ -83,15 +82,15 @@
         <v-col class="d-flex align-center field-hader">
           <span>Список датчиков</span>
           <v-spacer></v-spacer>
-          <v-btn icon tile min-height="48" min-width="48" @click="sensorsClickAdd">
+          <v-btn icon tile min-height="48" min-width="48" @click="openSensorDialog">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <TableSensors :sensors="sensors" @clickAdd="sensorsClickAdd" />
-          <CreateSensor :dialog="sensorDialog" @close="closeSensorDialog" />
+          <TableSensors :sensors="room.sensorList" />
+          <CreateSensor :dialog="sensorDialog" @close="closeSensorDialog" @save="sensorDialogSave" />
         </v-col>
       </v-row>
       
@@ -112,71 +111,44 @@ export default {
   data() {
     return {
       sensorDialog: false,
-      valid: false,
-      sensors: null,
-
-      name: null,
-      description: null,
-      onHome: false,
-      onHomeSensor1: null,
-      onHomeSensor2: null,
-      onHomeSensor3: null,
+      valid: false,     
+      room: {
+        name: "",
+        description: "",
+        onHome: "",
+        sensorOneId: null,
+        sensorTwoId: null,
+        sensorFreeId: null, 
+        sensorList: [],
+      },
     };
   },
-  mounted() {
-    this.loadSensors();
+  mounted() {    
     this.loadRoom();
   },
   computed: {
-    listSensorsName() {
-      return this.sensors.map((s) => ({
-        key: s.id,
-        name: s.name,
-      }));
-    },
-    pageIsLoad() {
-      return !this.sensors;
-    },
+    
   },
   methods: {
     loadRoom: function () {
       api.rooms.getRoom(this.$route.params.id).then((responce) => {
         this.room = responce.data;
-        this.name = responce.data.name;
-        this.description = responce.data.description;
-        this.onHome = responce.data.on_home;
-        this.onHomeSensor1 = responce.data.sensor_list[0] || null;
-        this.onHomeSensor2 = responce.data.sensor_list[1] || null;
-        this.onHomeSensor3 = responce.data.sensor_list[2] || null;
       });
     },
-    sensorsClickAdd() {
+    sensorDialogSave(sensor){
+      this.room.sensorList.push(sensor);
+      this.closeSensorDialog();
+    },    
+    openSensorDialog(){
       this.sensorDialog = true;
     },
     closeSensorDialog() {
       this.sensorDialog = false;
-    },
-    getOnHomeSensors: function () {
-      return [
-        this.onHomeSensor1,
-        this.onHomeSensor2,
-        this.onHomeSensor3,
-      ].filter((v) => v !== null);
-    },
-    loadSensors: function () {
-      api.rooms.getSensors().then((responce) => {
-        this.sensors = responce.data;
-      });
-    },
-    createRoom: function () {
-      var payload = {
-        name: this.name,
-        description: this.description,
-        on_home: this.onHome,
-        sensor_list: this.getOnHomeSensors(),
-      };
-      api.rooms.createRoom(payload).then((responce) => {
+    },    
+    updateRoom: function () {      
+      api.rooms.updateRoom(this.room).then((responce) => {
         console.log(responce);
+        alert("Аудитория обновлена");
       });
     },
   },

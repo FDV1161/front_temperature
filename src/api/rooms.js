@@ -26,12 +26,10 @@ export default function (instance) {
         },
         createDevice(payload) {
             return instance.post('devices', payload)
-        }
-
-
-        // updateRoom(id, payload){
-        //     return instance.post('sensors', payload)
-        // },
+        },
+        updateRoom(payload) {
+            return instance.put('rooms/' + payload.id, payload)
+        },
 
     }
 }

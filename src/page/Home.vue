@@ -27,7 +27,7 @@ export default {
   methods: {
     LoadRoom: function () {
       api.rooms.getRooms().then((responce) => {
-        this.rooms = responce.data;
+        this.rooms = responce.data.filter(room => room.onHome == true);
       });
     },
   },

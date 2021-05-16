@@ -1,16 +1,6 @@
 <template>
   <div class="room-details">
-    <div v-if="pageIsLoad"></div>
-    <v-container fluid v-else>
-      <v-row>
-        <v-col>
-          <v-text-field
-            label="Идентификатор"
-            :value="room.id"
-            readonly
-          ></v-text-field>
-        </v-col>
-      </v-row>
+    <v-container fluid>
       <v-row>
         <v-col>
           <v-text-field
@@ -29,40 +19,7 @@
           ></v-text-field>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col cols="8" class="d-flex align-center">
-          <span>Показывать на главном экране</span>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="4" class="d-flex justify-end">
-          <v-switch v-model="room.on_home" readonly></v-switch>
-        </v-col>
-      </v-row>
-      <!-- <v-expand-transition>
-      <v-row v-show="onHomeSwith" class="pt-0">
-        <v-col>
-          <v-select
-            :items="listSensorsName"
-            menu-props="auto"
-            label="Датчик"
-          ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
-            :items="listSensorsName"
-            menu-props="auto"
-            label="Датчик"
-          ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
-            :items="listSensorsName"
-            menu-props="auto"
-            label="Датчик"
-          ></v-select>
-        </v-col>
-      </v-row>
-      </v-expand-transition>     -->
+
       <v-row>
         <v-col class="d-flex align-center field-hader">
           <span>Список датчиков</span>
@@ -70,7 +27,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <TableSensors :sensors="room.sensor_list" />
+          <TableSensors :sensors="room.sensorList" />
         </v-col>
       </v-row>
       <v-row>
@@ -84,25 +41,34 @@
 
 <script>
 import api from "@/api/index";
-import TableSensors from "@/components/Rooms/Details/Table.vue";
+import TableSensors from "@/components/Sensors/ViewTable.vue";
 
 export default {
   components: {
     TableSensors,
   },
+
   data() {
     return {
-      room: null,
+      room: {
+        id: null,
+        name: "",
+        description: "",
+        onHome: "",
+        sensorOneId: null,
+        sensorTwoId: null,
+        sensorFreeId: null,
+        sensorList: [],
+      },
     };
   },
+
   mounted() {
     this.loadRoom();
   },
-  computed: {
-    pageIsLoad() {
-      return !this.room;
-    },
-  },
+
+  computed: {},
+
   methods: {
     loadRoom: function () {
       api.rooms.getRoom(this.$route.params.id).then((responce) => {

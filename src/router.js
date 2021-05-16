@@ -37,7 +37,7 @@ export default new Router({
             component: RoomDetailsPage
         },
         {            
-            path: '/edit-room',
+            path: '/edit-room/:id',
             name: 'edit-room',
             component: EditRoom
         },

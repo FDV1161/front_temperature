@@ -1,10 +1,10 @@
 export default function (instance) {
     return {
         getRooms() {
-            return instance.get('rooms')
+            return instance.get('room')
         },
         getRoom(payload) {
-            return instance.get('rooms/' + payload)
+            return instance.get('room/' + payload)
         },
         getSensors() {
             return instance.get('sensors')
@@ -13,10 +13,10 @@ export default function (instance) {
             return instance.get('sensors/' + payload)
         },
         createRoom(payload) {
-            return instance.post('rooms', payload)
+            return instance.post('room', payload)
         },
         deleteRoom(payload) {
-            return instance.delete('rooms/' + payload)
+            return instance.delete('room/' + payload)
         },
         createSensor(payload) {
             return instance.post('sensors', payload)
@@ -31,7 +31,7 @@ export default function (instance) {
             return instance.post('devices', payload)
         },
         updateRoom(payload) {
-            return instance.put('rooms/' + payload.id, payload)
+            return instance.put('room/' + payload.id, payload)
         },
         deleteSensor(payload){
             return instance.delete('sensors/' + payload)

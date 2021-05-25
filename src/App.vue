@@ -29,6 +29,7 @@
         </v-toolbar-items>
       </v-toolbar>
     </v-footer> -->
+    <notification-list />
   </v-app>
 </template>
 
@@ -38,6 +39,7 @@
 import List from "@/components/Navigations/List.vue";
 import AppBar from "@/components/Navigations/AppBar.vue";
 import SideBar from "@/components/Navigations/SideBar.vue";
+import NotificationList from "@/components/Base/NotificationList";
 
 export default {
   name: "App",
@@ -46,6 +48,7 @@ export default {
     List,
     AppBar,
     SideBar,    
+    NotificationList,
   },
 
   data: () => ({

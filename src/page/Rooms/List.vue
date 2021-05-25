@@ -81,6 +81,7 @@
 import api from "@/api/index";
 import CreateRoomModal from "@/components/Rooms/Create.vue";
 import DeleteDialog from "@/components/Base/DeleteDialog.vue";
+import { mapActions } from "vuex";
 
 export default {
   components: {
@@ -125,6 +126,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(["push_notifications"]),
     LoadRooms() {
       api.rooms.getRooms().then((responce) => {
         this.rooms = responce.data;
@@ -155,13 +157,17 @@ export default {
           this.closeDeleteDialog();
         })
         .catch((error) => {
+          this.push_notifications({
+            type: "error",
+            message: "Не удалось удалить аудиторию",
+          });
           console.log(error.response.data);
           if (error.response) {
-            alert(error.response.data);
+            console.log(error.response.data);
           } else if (error.request) {
-            alert(error.request);
+            console.log(error.request);
           } else {
-            alert("Error", error.message);
+            console.log("Error", error.message);
           }
         });
     },

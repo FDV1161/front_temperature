@@ -18,6 +18,15 @@
         </div>
       </template>
 
+      <template v-slot:item.name="{ item }">
+        <router-link
+          :to="{ name: 'sensor', params: { id: item.id } }"
+          class="table-link"
+        >
+          {{ item.name }}
+        </router-link>
+      </template>
+
       <template v-slot:no-data>
         <div>Список датчиков пуст</div>
       </template>

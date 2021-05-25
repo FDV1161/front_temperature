@@ -9,6 +9,9 @@ export default function (instance) {
         getSensors() {
             return instance.get('sensors')
         },
+        getSensor(payload) {
+            return instance.get('sensors/' + payload)
+        },
         createRoom(payload) {
             return instance.post('rooms', payload)
         },

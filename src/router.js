@@ -13,7 +13,7 @@ import Users from '@/page/Users.vue'
 import RoomDetailsPage from '@/page/Rooms/Display.vue'
 import EditRoom from '@/page/Rooms/Edit.vue'
 import CreateRoom from '@/page/Rooms/Create.vue'
-
+import Sensor from '@/page/Sensors/Display.vue'
 
 Vue.use(Router)
 
@@ -71,6 +71,11 @@ export default new Router({
             path: '/sensors',
             name: 'sensors',
             component: Sensors
+        },
+        {
+            path: '/sensor/:id',
+            name: 'sensor',
+            component: Sensor
         },
         {
             path: '*',

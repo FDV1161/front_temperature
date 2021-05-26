@@ -27,7 +27,9 @@ export default {
   },
 
   methods: {
-    ...mapActions(["remove_notifications"]),
+    ...mapActions({
+      remove_notifications: "notifications/remove_notifications",
+    }),
     click() {
       this.remove_notifications(this.notification);
     },

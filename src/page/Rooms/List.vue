@@ -122,11 +122,13 @@ export default {
   },
 
   mounted() {
-    this.LoadRooms();
+    this.LoadRooms();    
   },
 
   methods: {
-    ...mapActions(["push_notifications"]),
+    ...mapActions({
+      push_notifications: "notifications/push_notifications",
+    }),
     LoadRooms() {
       api.rooms.getRooms().then((responce) => {
         this.rooms = responce.data;

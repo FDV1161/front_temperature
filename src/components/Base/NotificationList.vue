@@ -17,7 +17,9 @@ export default {
   components: {
     NotificationMessage,
   },
-  computed: mapState(["notifications"]),
+  computed: {
+    ...mapState('notifications', ["notifications"]),
+  },
 };
 </script>
 

@@ -78,7 +78,6 @@
 
 
 <script>
-import api from "@/api/index";
 import CreateRoomModal from "@/components/Rooms/Create.vue";
 import DeleteDialog from "@/components/Base/DeleteDialog.vue";
 import { mapActions } from "vuex";
@@ -129,10 +128,11 @@ export default {
     ...mapActions({
       push_notifications: "notifications/push_notifications",
     }),
-    LoadRooms() {
-      api.rooms.getRooms().then((responce) => {
+    LoadRooms() {     
+      this.$api.rooms.getRooms().then(responce => {
         this.rooms = responce.data;
-      });
+      })
+
     },
 
     choiceDeleteRoom(room) {
@@ -152,7 +152,7 @@ export default {
       this.closeRoomDialog();
     },
     deleteRoom() {
-      api.rooms
+      this.$api.rooms
         .deleteRoom(this.activeRoom.id)
         .then((responce) => {
           this.spliceRooms();

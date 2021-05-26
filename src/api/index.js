@@ -1,13 +1,9 @@
 import instance from './instance'
-import roomsModule from './rooms'
+import roomsModule from './modules/rooms'
+import devicesModule from './modules/devices'
 
-getSensors: (instance) => {
-    instance.get('sensors')
-}
 
 export default {
-    rooms: roomsModule(instance), 
-    // getSensors(){
-    //     return instance.get('sensors')
-    // },
+    rooms: roomsModule(instance),
+    devices: devicesModule(instance),
 }

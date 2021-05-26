@@ -2,7 +2,6 @@ export default {
     namespaced: true,
     state: {
         notifications: [],
-        rooms: []
     },
     getters: {
 

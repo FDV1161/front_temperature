@@ -2,11 +2,15 @@
   <v-form v-model="valid">
     <v-container fluid>
       <v-row>
-        <v-col class="d-flex justify-end">
-          <v-btn class="mr-2" @click="$router.go(-1)"> Отмена </v-btn>
-          <v-btn color="primary" v-on:click="createRoom" :disabled="!valid">
-            Сохранить
-          </v-btn>
+        <v-col>
+          <v-toolbar flat>
+            <v-toolbar-title>Создание аудитории</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn text tile v-on:click="createRoom" :disabled="!valid">
+              <v-icon left> mdi-content-save </v-icon>
+              Сохранить
+            </v-btn>
+          </v-toolbar>
         </v-col>
       </v-row>
       <v-row>
@@ -35,7 +39,8 @@
 </template>
 
 <script>
-import api from "@/api/index";
+import { mapActions } from "vuex";
+import { console_print_error } from "@/utils/index";
 
 export default {
   data() {
@@ -48,24 +53,28 @@ export default {
     };
   },
   methods: {
+    ...mapActions({
+      pushNotifications: "notifications/push_notifications",
+    }),
     createRoom: function () {
-      api.rooms
+      this.$api.rooms
         .createRoom(this.room)
         .then((responce) => {
+          this.pushNotifications({
+            type: "success",
+            message: "Аудитория создана",
+          });
           this.$router.push({
             name: "edit-room",
             params: { id: responce.data.id },
           });
         })
         .catch((error) => {
-          // console.log(error.response.data);
-          if (error.response) {
-            alert(error.response.data);
-          } else if (error.request) {
-            alert(error.request);
-          } else {
-            alert("Error", error.message);
-          }
+          this.pushNotifications({
+            type: "error",
+            message: error.response.data,
+          });
+          console_print_error(error);
         });
     },
   },

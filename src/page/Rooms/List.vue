@@ -11,31 +11,27 @@
           mobile-breakpoint="0"
         >
           <template v-slot:top>
-            <v-toolbar flat>
-              <v-toolbar-title>Список аудиторий</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-text-field
-                v-model="search"
-                append-icon="mdi-magnify"
-                label="Поиск"
-                hide-details
-                class="mr-5"
-              ></v-text-field>
-              <v-btn icon tile router to="/create-room">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn>
-              <create-room-modal
-                :dialog="dialogs.create"
-                @close="closeRoomDialog"
-                @save="appendRoom"
-              />
-            </v-toolbar>
-            <delete-dialog
-              :dialog="dialogs.delete"
-              :name="deleteName"
-              @close="closeDeleteDialog"
-              @ok="deleteRoom"
-            />
+            <v-row>
+              <v-col>
+                <v-toolbar flat>
+                  <v-toolbar-title>Список аудиторий</v-toolbar-title>
+                </v-toolbar>
+              </v-col>
+              <v-col cols="12" sm="6" md="6">
+                <v-toolbar flat>
+                  <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Поиск"
+                    hide-details
+                    class="mr-5"
+                  ></v-text-field>
+                  <v-btn icon tile router to="/create-room">
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                </v-toolbar>
+              </v-col>
+            </v-row>
           </template>
 
           <template v-slot:item.name="{ item }">
@@ -69,6 +65,12 @@
         </v-data-table>
       </v-col>
     </v-row>
+    <delete-dialog
+      :dialog="dialogs.delete"
+      :name="deleteName"
+      @close="closeDeleteDialog"
+      @ok="deleteRoom"
+    />
   </v-container>
 </template>
 
@@ -87,7 +89,6 @@ export default {
   data: () => ({
     search: "",
     dialogs: {
-      create: false,
       delete: false,
     },
     activeRoom: null,
@@ -127,22 +128,21 @@ export default {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
       loadRooms: "rooms/loadRooms",
-      removeRoom: "rooms/removeRoom",
-      addRoom: "rooms/addRoom",
+      removeRoom: "rooms/removeRoom",      
     }),
     choiceDeleteRoom(room) {
       this.activeRoom = room;
       this.openDeleteDialog();
-    },
-    appendRoom(room) {
-      this.addRoom(room);
-      this.closeRoomDialog();
-    },
+    },    
     deleteRoom() {
       this.$api.rooms
         .deleteRoom(this.activeRoom.id)
         .then((responce) => {
           this.removeRoom(this.activeRoom);
+          this.pushNotifications({
+            type: "success",
+            message: "Аудитория удалена",
+          });
           this.closeDeleteDialog();
         })
         .catch((error) => {
@@ -160,14 +160,8 @@ export default {
           }
         });
     },
-    openRoomDialog() {
-      this.dialogs.create = true;
-    },
     openDeleteDialog() {
       this.dialogs.delete = true;
-    },
-    closeRoomDialog() {
-      this.dialogs.create = false;
     },
     closeDeleteDialog() {
       this.dialogs.delete = false;

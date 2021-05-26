@@ -21,9 +21,6 @@
                 hide-details
                 class="mr-5"
               ></v-text-field>
-              <!-- <v-btn icon tile router @click="openRoomDialog">
-                <v-icon>mdi-plus</v-icon>
-              </v-btn> -->
               <v-btn icon tile router to="/create-room">
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
@@ -80,7 +77,7 @@
 <script>
 import CreateRoomModal from "@/components/Rooms/Create.vue";
 import DeleteDialog from "@/components/Base/DeleteDialog.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   components: {
@@ -88,7 +85,6 @@ export default {
     DeleteDialog,
   },
   data: () => ({
-    rooms: [],
     search: "",
     dialogs: {
       create: false,
@@ -112,6 +108,7 @@ export default {
   }),
 
   computed: {
+    ...mapState("rooms", ["rooms"]),
     deleteName() {
       if (this.activeRoom) {
         return this.activeRoom.name;
@@ -120,46 +117,36 @@ export default {
     },
   },
 
-  mounted() {
-    this.LoadRooms();    
+  created() {
+    this.$api.rooms.getRooms().then((responce) => {
+      this.loadRooms(responce.data);
+    });
   },
 
   methods: {
     ...mapActions({
-      push_notifications: "notifications/push_notifications",
+      pushNotifications: "notifications/push_notifications",
+      loadRooms: "rooms/loadRooms",
+      removeRoom: "rooms/removeRoom",
+      addRoom: "rooms/addRoom",
     }),
-    LoadRooms() {     
-      this.$api.rooms.getRooms().then(responce => {
-        this.rooms = responce.data;
-      })
-
-    },
-
     choiceDeleteRoom(room) {
       this.activeRoom = room;
       this.openDeleteDialog();
     },
-
-    spliceRooms() {
-      // TODO переделать?
-      if (this.activeRoom) {
-        this.rooms.splice(this.rooms.indexOf(this.activeRoom), 1);
-        this.activeRoom = null;
-      }
-    },
     appendRoom(room) {
-      this.rooms.push(room);
+      this.addRoom(room);
       this.closeRoomDialog();
     },
     deleteRoom() {
       this.$api.rooms
         .deleteRoom(this.activeRoom.id)
         .then((responce) => {
-          this.spliceRooms();
+          this.removeRoom(this.activeRoom);
           this.closeDeleteDialog();
         })
         .catch((error) => {
-          this.push_notifications({
+          this.pushNotifications({
             type: "error",
             message: "Не удалось удалить аудиторию",
           });

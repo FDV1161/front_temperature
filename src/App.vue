@@ -2,7 +2,7 @@
   <v-app>
     <app-bar :drawer="drawer" :menu="menu" />
     <side-bar :drawer="drawer" />
-    <v-main app>
+    <v-main app>      
       <router-view />
     </v-main>
     <notification-list />
@@ -32,12 +32,11 @@ export default {
         link: "/",
       },
     ],
-
     drawer: {
       side_bar: window.innerWidth > 1264, // in order to not show after a reboots
       nav_bar: false,
     },
-  }),
+  }),  
 };
 </script>
 

@@ -41,7 +41,7 @@
 
 <script>
 import api from "@/api/index";
-import TableSensors from "@/components/Sensors/ViewTable.vue";
+import TableSensors from "@/components/Devices/ViewTable.vue";
 
 export default {
   components: {

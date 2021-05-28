@@ -3,9 +3,10 @@
     <app-bar :drawer="drawer" :menu="menu" />
     <side-bar :drawer="drawer" />
     <v-main app>      
-      <router-view />
+      <notification-list />
+      <router-view />      
     </v-main>
-    <notification-list />
+    
   </v-app>
 </template>
 

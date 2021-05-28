@@ -2,38 +2,28 @@
   <v-form v-model="valid">
     <v-container fluid>
       <v-row>
-        <v-col>
+        <v-col class="px-0">
           <v-toolbar flat>
             <v-toolbar-title>Создание аудитории</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn text tile v-on:click="createRoom" :disabled="!valid">
+            <v-btn class="mr-2" text tile @click="$router.go(-1)">
+              Назад
+            </v-btn>
+            <v-btn
+              color="primary"
+              tile
+              v-on:click="createRoom"
+              :disabled="!valid"
+            >
               <v-icon left> mdi-content-save </v-icon>
               Сохранить
             </v-btn>
           </v-toolbar>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
-          <v-text-field
-            v-model="room.name"
-            :rules="[(v) => !!v || 'Обязательное поле']"
-            required
-          >
-            <template #label>
-              <span class="red--text"><strong>* </strong></span>Название
-            </template>
-          </v-text-field>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-text-field
-            label="Описание"
-            v-model="room.description"
-          ></v-text-field>
-        </v-col>
-      </v-row>
+
+      <input-field v-model="room.name" label="Название" required />
+      <input-field v-model="room.description" label="Описание" />
     </v-container>
   </v-form>
 </template>
@@ -41,8 +31,12 @@
 <script>
 import { mapActions } from "vuex";
 import { console_print_error } from "@/utils/index";
+import InputField from "@/components/Base/Fields/InputField.vue";
 
 export default {
+  components: {
+    InputField,
+  },
   data() {
     return {
       valid: false,

@@ -37,7 +37,7 @@
 
 
 <script>
-import { headers } from "@/components/Sensors/data.js";
+import { headers } from "@/components/Devices/data.js";
 
 export default {
   props: ["sensors"],

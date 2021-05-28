@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="sensorsDataTable"
+      :items="devices"
       :search="search"
       hide-default-footer
       mobile-breakpoint="0"
@@ -31,32 +31,17 @@
 import { headers } from "@/components/Rooms/Details/Data.js";
 
 export default {
-  props: ["sensors", "dialog"],
+  props: ["devices", "dialog"],
   data: () => ({
     search: "",
     headers: headers,
   }),
-  computed: {
-    sensorsDataTable() {
-      return this.sensors.map((s) => ({
-        id: s.id,
-        name: s.name,
-        address: s.address,
-        measure: this.getMeasureName(s),
-      }));
-    },
-  },
+
   methods: {
-    getMeasureName(sensor) {
-      if (sensor.measure != null) {
-        return `${sensor.measure.name} (${sensor.measure.symbol})`;
-      }
-      return "";
-    },
     deleteClick(item) {
       this.$emit("deleteClick", item);
     },
-    editClick() {
+    editClick(item) {
       this.$emit("editClick", item);
     },
   },

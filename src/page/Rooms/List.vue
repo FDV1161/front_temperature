@@ -8,7 +8,7 @@
           :search="search"
           hide-default-footer
           disable-pagination
-          mobile-breakpoint="0"
+          mobile-breakpoint="0"          
         >
           <template v-slot:top>
             <v-row>
@@ -93,6 +93,12 @@ export default {
     },
     activeRoom: null,
     headers: [
+      {
+        text: "№",
+        align: "start",
+        value: "id",
+        width: "100px",        
+      },
       {
         text: "Название",
         align: "start",

@@ -3,7 +3,9 @@ import Router from 'vue-router'
 
 import HomePage from '@/page/Home.vue'
 import RoomsPage from '@/page/Rooms/List.vue'
-import FunctionsPage from '@/page/Functions.vue'
+import FunctionsPage from '@/page/Functions/List.vue'
+import FunctionsCreatePage from '@/page/Functions/Create.vue'
+import FunctionsEditPage from '@/page/Functions/Edit.vue'
 import UserGroups from '@/page/UserGroups.vue'
 import Users from '@/page/Users.vue'
 import RoomDetailsPage from '@/page/Rooms/Display.vue'
@@ -41,11 +43,21 @@ export default new Router({
             name: 'create-room',
             component: CreateRoom
         },
-        {            
+        {
             path: '/functions',
             name: 'functions',
             component: FunctionsPage
         },
+        {
+            path: '/functions/create',
+            name: 'functions-create',
+            component: FunctionsCreatePage
+        },
+        {
+            path: '/functions/edit/:id',
+            name: 'function-edit',
+            component: FunctionsEditPage
+        },        
         {            
             path: '/user-groups',
             name: 'user-groups',

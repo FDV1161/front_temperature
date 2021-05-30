@@ -144,7 +144,6 @@ export default {
       this.dialogs.editDevice = true;
     },
     saveEditDeviceDialog(item) {
-      console.log(item);
       this.room.devices = this.room.devices.filter((device) => {
         return device.id != item.id;
       });

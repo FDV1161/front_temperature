@@ -35,6 +35,7 @@
 <script>
 import api from "@/api/index";
 import BaseDialog from "@/components/Base/Dialog.vue";
+import { console_print_error } from "@/utils/index";
 
 export default {
   props: ["dialog"],
@@ -64,14 +65,7 @@ export default {
           this.$emit("save", responce.data);
         })
         .catch((error) => {
-          console.log(error.response.data);
-          if (error.response) {
-            alert(error.response.data);
-          } else if (error.request) {
-            alert(error.request);
-          } else {
-            alert("Error", error.message);
-          }
+          console_print_error(error);          
         });
     },
   },

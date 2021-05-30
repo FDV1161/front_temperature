@@ -190,7 +190,6 @@ export default {
             type: "success",
             message: "Датчик обновлен",
           });
-          console.log(responce.data);
           this.$emit("save", responce.data);
         })
         .catch((error) => {

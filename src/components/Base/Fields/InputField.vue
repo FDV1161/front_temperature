@@ -21,7 +21,9 @@ export default {
     event: "input",
   },
   props: {
-    value: String,
+    value: {
+      
+    },
     label: String,
     required: {
       type: Boolean,

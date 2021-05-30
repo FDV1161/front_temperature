@@ -11,12 +11,33 @@
       <v-container fluid>
         <input-field v-model="device.name" label="Название" required />
         <input-field v-model="device.description" label="Описание" />
+
         <v-row>
           <v-col>
             <v-file-input
-              label="Загрузка иконки"
-              prepend-icon="mdi-file-image"
+              id="fileUpload2"
+              v-bind="icon"
+              @change="selectFile"
+              v-show="false"
             ></v-file-input>
+            <v-btn tile @click="chooseFiles">Загрузить иконку</v-btn>
+            <v-btn icon @click="deleteIcon" v-show="icon || this.device.icon">
+              <v-icon color="red"> mdi-delete </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-show="icon || device.icon">
+          <v-col>
+            <!-- :href="icon_url" target="_blank" -->
+            <v-btn icon @click="this.window.open(icon_url)">
+              <v-img
+                class="ml-4"
+                :lazy-src="icon_url"
+                max-height="64"
+                max-width="64"
+                :src="icon_url"
+              ></v-img>
+            </v-btn>
           </v-col>
         </v-row>
 
@@ -104,7 +125,8 @@ export default {
     return {
       controllerDialog: false,
       valid: false,
-
+      icon: null,
+      iconChanged: false,
       controllers: [],
 
       controller: {
@@ -130,6 +152,17 @@ export default {
     });
   },
 
+  computed: {
+    icon_url() {
+      if (this.icon != null) {
+        return this.device.icon;
+      } else if (this.device.icon != null) {
+        return "http://127.0.0.1:5000/static/" + this.device.icon;
+      }
+      return "none";
+    },
+  },
+
   watch: {
     "device.controllerId": function (new_val) {
       if (new_val) {
@@ -142,6 +175,18 @@ export default {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
     }),
+    selectFile(file) {
+      this.icon = file;
+      this.device.icon = URL.createObjectURL(file);
+      this.iconChanged = true;
+    },
+    deleteIcon() {
+      this.device.icon = null;
+      this.icon = null;
+    },
+    chooseFiles: function () {
+      document.getElementById("fileUpload2").click();
+    },
     controllerDialogSave(controller) {
       this.controllers.push(controller);
       this.device.controllerId = controller.id;
@@ -154,11 +199,11 @@ export default {
       this.$refs.deviceCreateForm.reset();
       this.$emit("close");
     },
-    save() {
+    createDevice() {
       this.$api.devices
         .create(this.device)
         .then((responce) => {
-          this.$refs.deviceCreateForm.reset();          
+          this.$refs.deviceCreateForm.reset();
           this.pushNotifications({
             type: "success",
             message: "Датчик создан",
@@ -172,6 +217,17 @@ export default {
           });
           console_print_error(error);
         });
+    },
+    save() {
+      if (this.iconChanged) {
+        this.$api.devices.upload_file(this.icon).then((responce) => {
+          this.icon = null;
+          this.device.icon = responce.data;
+          this.createDevice();
+        });
+      } else {
+        this.createDevice();
+      }
     },
   },
 };

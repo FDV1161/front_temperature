@@ -11,6 +11,7 @@
       <v-container fluid>
         <input-field v-model="device.name" label="Название" required />
         <input-field v-model="device.description" label="Описание" />
+        
         <v-row>
           <v-col>
             <v-file-input
@@ -27,14 +28,19 @@
         </v-row>
         <v-row v-show="icon || device.icon">
           <v-col>
-            <v-img
-              :lazy-src="icon_url"
-              max-height="64"
-              max-width="64"
-              :src="icon_url"
-            ></v-img>
+            <!-- :href="icon_url" target="_blank" -->
+            <v-btn icon @click="this.window.open(icon_url);" >
+              <v-img
+                class="ml-4"
+                :lazy-src="icon_url"
+                max-height="64"
+                max-width="64"
+                :src="icon_url"
+              ></v-img>
+            </v-btn>                           
           </v-col>
         </v-row>
+
         <v-row>
           <v-col>
             <div class="d-flex">
@@ -160,9 +166,11 @@ export default {
       pushNotifications: "notifications/push_notifications",
     }),
     selectFile(file) {
-      this.icon = file;
-      this.device.icon = URL.createObjectURL(file);
-      this.iconChanged = true;
+      if (file != none){
+        this.icon = file;
+        this.device.icon = URL.createObjectURL(file);
+        this.iconChanged = true;
+      }      
     },
     deleteIcon() {
       this.device.icon = null;
@@ -170,10 +178,10 @@ export default {
     },
     chooseFiles: function () {
       document.getElementById("fileUpload").click();
-    },    
+    },
     close() {
       this.$emit("close");
-    },    
+    },
     updateDevice() {
       this.$api.devices
         .update(this.device)
@@ -195,7 +203,7 @@ export default {
     },
     save() {
       if (this.iconChanged) {
-        this.$api.devices.upload_file(this.icon).then((responce) => {          
+        this.$api.devices.upload_file(this.icon).then((responce) => {
           this.icon = null;
           this.device.icon = responce.data;
           this.updateDevice();

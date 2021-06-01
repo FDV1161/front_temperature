@@ -9,7 +9,7 @@
   >
     <v-form ref="deviceFunctionEditForm" v-model="valid">
       <v-container fluid>
-        <input-field v-model="deviceFunction.address" label="Адрес" required />
+        <input-field v-model="editDeviceFunction.address" label="Адрес" required />
 
         <v-row>
           <v-col cols="8" class="d-flex align-center">
@@ -17,7 +17,7 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col cols="4" class="d-flex justify-end">
-            <v-switch v-model="deviceFunction.onHome"></v-switch>
+            <v-switch v-model="editDeviceFunction.onHome"></v-switch>
           </v-col>
         </v-row>
 
@@ -30,24 +30,14 @@
                 label="Функция"
                 item-value="id"
                 item-text="name"
-                v-model="deviceFunction.func.id"
+                v-model="editDeviceFunction.func.id"
                 clearable                
                 class="required"
                 :rules="[(value) => !!value || 'Обязательное поле']"
               ></v-select>
             </div>
           </v-col>
-        </v-row>
-        <v-row>
-            <v-col>
-                {{deviceFunction}}
-            </v-col>
-        </v-row>
-        <v-expand-transition>
-          <v-row v-show="deviceFunction.func.id">
-            <v-container fluid class="mx-2 elevation-1"> </v-container>
-          </v-row>
-        </v-expand-transition>
+        </v-row>                
       </v-container>
     </v-form>
   </base-dialog>
@@ -64,7 +54,7 @@ export default {
   props: {
     deviceFunction: {
       default: {
-        name: "",
+        address: "",
         onHome: false,
         func: {
           id: null,
@@ -84,9 +74,28 @@ export default {
     return {
       valid: false,
       functions: [],
+      editDeviceFunction: {
+        address: "",
+        onHome: false,
+        func: {
+          id: null,
+          name: "",
+        },
+      }
     };
   },
 
+  watch: {
+    // "deviceFunction": function (new_val) {        
+    //   this.editDeviceFunction = Object.assign({}, new_val);
+    // },
+    "dialog": function (new_val) {        
+      const editDeviceFunction = JSON.parse(JSON.stringify(this.deviceFunction));    
+      this.editDeviceFunction = Object.assign({}, editDeviceFunction);
+    },
+  },
+
+  
   created() {
     this.$api.functions.getAll().then((responce) => {
       this.functions = responce.data; 
@@ -97,9 +106,9 @@ export default {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
     }),
-    close() {
-      // this.$refs.deviceFunctionEditForm.reset();
+    close() {      
       this.$emit("close");
+      this.$refs.deviceFunctionEditForm.reset();
     },
     get_function_name(){
       const func = this.functions.filter(f => {
@@ -110,11 +119,17 @@ export default {
       }
       return "";
     },
+    copy_values(){     
+      const editDeviceFunction = JSON.parse(JSON.stringify(this.editDeviceFunction));    
+      Object.assign(this.deviceFunction, editDeviceFunction)
+    },
     save() {
       console.log(this.deviceFunction);
       // this.$emit("save", { ...this.deviceFunction });
+      this.copy_values();
       this.deviceFunction.func.name = this.get_function_name();
-      this.$emit("save", this.deviceFunction);
+      this.$emit("save", this.deviceFunction);      
+      this.$refs.deviceFunctionEditForm.reset();
     },
   },
 };

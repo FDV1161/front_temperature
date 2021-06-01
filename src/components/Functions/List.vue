@@ -44,17 +44,7 @@
           </template>
         </v-data-table>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        {{activeItem}}
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        {{deviceFunctions}}
-      </v-col>
-    </v-row>
+    </v-row>    
     <delete-dialog
       :dialog="dialogs.delete"
       :name="deleteName"
@@ -85,7 +75,7 @@ export default {
 
   data: () => ({
     activeItem: {
-      name: "",
+      address: null,
       onHome: false,      
       func: {
         id: null,
@@ -93,7 +83,7 @@ export default {
       }
     },
     defaulItem: {
-      name: "",
+      address: null,
       onHome: false,      
       func: {
         id: null,
@@ -143,20 +133,21 @@ export default {
   methods: {
     createNewItem(){
       this.dialogs.editFunction = true;
-      this.activeItem = this.defaulItem;
+      // this.activeItem = Object.assign({}, this.defaulItem);
+      this.activeItem = JSON.parse(JSON.stringify(this.defaulItem));
     },
     choiceDeleteItem(item) {
-      // this.activeItem = item;
-      this.activeItem = Object.assign({}, item);
+      this.activeItem = item;
+      // this.activeItem = Object.assign({}, item);
       // TODO фу фу фу исправить
       // this.activeItem = JSON.parse(JSON.stringify(item));
       this.openDeleteDialog();
     },
     choiceEditItem(item){      
-      // this.activeItem = {...item};            
-      this.activeItem = Object.assign({}, item);
+      this.activeItem = item;
+      // this.activeItem = Object.assign({}, item);
       // TODO фу фу фу исправить
-      console.log(JSON.parse(JSON.stringify(item)));
+      // console.log(JSON.parse(JSON.stringify(item)));
       // this.activeItem = JSON.parse(JSON.stringify(item));
       this.dialogs.editFunction = true;
     },

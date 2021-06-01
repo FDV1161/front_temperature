@@ -173,24 +173,22 @@ export default {
       pushNotifications: "notifications/push_notifications",
     }),
     deleteFunction(func) {
-      console.log("i am run delete");
-      console.log(func);
-      this.device.deviceFunctions = this.device.deviceFunctions.filter(
-        (item) => {
-          return item.id != func.id;
-        }
-      );
+      // console.log("i am run delete");
+      // console.log(func);
+      // this.device.deviceFunctions = this.device.deviceFunctions.filter(
+      //   (item) => {
+      //     return item.id != func.id;
+      //   }
+      // );
+      const func_index =this.device.deviceFunctions.indexOf(func);
+      this.device.deviceFunctions.splice(func_index, 1);
     },
     saveFunction(func) {
-      console.log("i am run save");
-      console.log(func);      
-      if (func.id != undefined) {
-        this.device.deviceFunctions = this.device.deviceFunctions.filter(
-          (item) => item.id != func.id
-        );
-      }
+      const func_index =this.device.deviceFunctions.indexOf(func);
+      if (func_index >= 0){
+        this.device.deviceFunctions.splice(func_index, 1);
+      }      
       this.device.deviceFunctions.push(func);
-      console.log(this.device.deviceFunctions);
     },
     selectFile(file) {
       if (file != none) {
@@ -207,7 +205,6 @@ export default {
       document.getElementById("fileUpload").click();
     },
     close() {
-      console.log("i am run close");
       this.$emit("close");
     },
     prepare_request(){   
@@ -215,6 +212,7 @@ export default {
       request.deviceFunctions = request.deviceFunctions.map(e => {
         if (e.func != undefined){
           e.idFunc = e.func.id;
+          e.idDevice = this.device.id;
         }
         return e;
       })

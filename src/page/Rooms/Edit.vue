@@ -118,7 +118,8 @@ export default {
   created() {
     this.$api.rooms.getRoom(this.$route.params.id).then((responce) => {
       this.room = responce.data;
-    });
+      console.log(this.room);
+    });    
   },
 
   methods: {
@@ -144,6 +145,7 @@ export default {
       this.dialogs.editDevice = true;
     },
     saveEditDeviceDialog(item) {
+      console.log(item);
       this.room.devices = this.room.devices.filter((device) => {
         return device.id != item.id;
       });

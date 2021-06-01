@@ -11,7 +11,7 @@
       <v-container fluid>
         <input-field v-model="device.name" label="Название" required />
         <input-field v-model="device.description" label="Описание" />
-        
+
         <v-row>
           <v-col>
             <v-file-input
@@ -29,7 +29,7 @@
         <v-row v-show="icon || device.icon">
           <v-col>
             <!-- :href="icon_url" target="_blank" -->
-            <v-btn icon @click="this.window.open(icon_url);" >
+            <v-btn icon @click="this.window.open(icon_url)">
               <v-img
                 class="ml-4"
                 :lazy-src="icon_url"
@@ -37,7 +37,7 @@
                 max-width="64"
                 :src="icon_url"
               ></v-img>
-            </v-btn>                           
+            </v-btn>
           </v-col>
         </v-row>
 
@@ -97,6 +97,11 @@
           </v-row>
         </v-expand-transition>
       </v-container>
+      <functions
+        :deviceFunctions="device.deviceFunctions"
+        @delete="deleteFunction"
+        @save="saveFunction"
+      />
     </v-form>
     <create-controller-dialog
       :dialog="controllerDialog"
@@ -113,6 +118,7 @@ import BaseDialog from "@/components/Base/Dialog.vue";
 import { console_print_error } from "@/utils/index";
 import InputField from "@/components/Base/Fields/InputField.vue";
 import { mapActions } from "vuex";
+import Functions from "@/components/Functions/List.vue";
 
 export default {
   props: ["device", "dialog"],
@@ -120,6 +126,7 @@ export default {
     BaseDialog,
     InputField,
     CreateControllerDialog,
+    Functions,
   },
   data() {
     return {
@@ -144,7 +151,7 @@ export default {
         return "http://127.0.0.1:5000/static/" + this.device.icon;
       }
       return "none";
-    },
+    },    
   },
 
   watch: {
@@ -165,12 +172,32 @@ export default {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
     }),
+    deleteFunction(func) {
+      console.log("i am run delete");
+      console.log(func);
+      this.device.deviceFunctions = this.device.deviceFunctions.filter(
+        (item) => {
+          return item.id != func.id;
+        }
+      );
+    },
+    saveFunction(func) {
+      console.log("i am run save");
+      console.log(func);      
+      if (func.id != undefined) {
+        this.device.deviceFunctions = this.device.deviceFunctions.filter(
+          (item) => item.id != func.id
+        );
+      }
+      this.device.deviceFunctions.push(func);
+      console.log(this.device.deviceFunctions);
+    },
     selectFile(file) {
-      if (file != none){
+      if (file != none) {
         this.icon = file;
         this.device.icon = URL.createObjectURL(file);
         this.iconChanged = true;
-      }      
+      }
     },
     deleteIcon() {
       this.device.icon = null;
@@ -180,11 +207,22 @@ export default {
       document.getElementById("fileUpload").click();
     },
     close() {
+      console.log("i am run close");
       this.$emit("close");
+    },
+    prepare_request(){   
+      var request = Object.assign({}, this.device);
+      request.deviceFunctions = request.deviceFunctions.map(e => {
+        if (e.func != undefined){
+          e.idFunc = e.func.id;
+        }
+        return e;
+      })
+      return request
     },
     updateDevice() {
       this.$api.devices
-        .update(this.device)
+        .update(this.prepare_request())
         .then((responce) => {
           this.pushNotifications({
             type: "success",
@@ -225,4 +263,7 @@ export default {
 
 
 <style scoped>
+.field-hader {
+  height: 90px;
+}
 </style>

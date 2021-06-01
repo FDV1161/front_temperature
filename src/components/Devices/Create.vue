@@ -250,7 +250,7 @@ export default {
       if (this.iconChanged) {
         this.$api.devices.upload_file(this.icon).then((responce) => {
           this.icon = null;
-          this.device.icon = responce.data;
+          this.device.icon = responce.data.icon_path;
           this.createDevice();
         });
       } else {

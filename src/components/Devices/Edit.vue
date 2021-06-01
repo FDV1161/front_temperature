@@ -29,14 +29,19 @@
         <v-row v-show="icon || device.icon">
           <v-col>
             <!-- :href="icon_url" target="_blank" -->
-            <v-btn icon @click="this.window.open(icon_url)">
-              <v-img
-                class="ml-4"
+            <v-btn icon @click="this.window.open(icon_url)" class="ml-4">
+              <!-- <v-img
+                class="ml-4 size-images"
                 :lazy-src="icon_url"
                 max-height="64"
-                max-width="64"
+                max-width="64"           
                 :src="icon_url"
-              ></v-img>
+              ></v-img> -->
+              <img
+                class="size-images"
+                :lazy-src="icon_url"                          
+                :src="icon_url"
+              ></img>
             </v-btn>
           </v-col>
         </v-row>
@@ -191,7 +196,7 @@ export default {
       this.device.deviceFunctions.push(func);
     },
     selectFile(file) {
-      if (file != none) {
+      if (file != null) {
         this.icon = file;
         this.device.icon = URL.createObjectURL(file);
         this.iconChanged = true;
@@ -240,7 +245,7 @@ export default {
       if (this.iconChanged) {
         this.$api.devices.upload_file(this.icon).then((responce) => {
           this.icon = null;
-          this.device.icon = responce.data;
+          this.device.icon = responce.data.icon_path;
           this.updateDevice();
         });
       } else {
@@ -263,5 +268,12 @@ export default {
 <style scoped>
 .field-hader {
   height: 90px;
+}
+.size-images{
+  width: 48px;
+  height: 48px;
+  max-height: 48px;
+  max-width: 48px;  
+  background-color: #E0E0E0;
 }
 </style>

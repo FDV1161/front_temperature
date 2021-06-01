@@ -1,11 +1,12 @@
 <template>
-  <div class="home">    
+  <div class="home">
     <v-container fluid>
       <v-row>
-        <v-col md="3" v-for="room in this.rooms" :key="room.id" >          
-          <Card :data="room" />          
+        <v-col cols="12" sm="6" md="3" v-for="room in rooms" :key="room.id">
+          <Card :data="room" />
         </v-col>
       </v-row>
+      
     </v-container>
   </div>
 </template>
@@ -16,7 +17,7 @@ import api from "@/api/index";
 
 export default {
   data: () => ({
-    rooms: null
+    rooms: null,
   }),
   components: {
     Card,
@@ -27,7 +28,20 @@ export default {
   methods: {
     LoadRoom: function () {
       api.rooms.getRooms().then((responce) => {
-        this.rooms = responce.data.filter(room => room.onHome == true);
+        // this.rooms = responce.data;
+        this.rooms = responce.data.filter((room) => {
+          let result = false;          
+          if ("devices" in room) {
+            result = room.devices.some((device) => {              
+              if ("deviceFunctions" in device) {
+                return device.deviceFunctions.some((df) => {
+                    return df.onHome;                                     
+                });
+              }          
+            });           
+          }         
+          return result;
+        });        
       });
     },
   },

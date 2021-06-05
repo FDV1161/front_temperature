@@ -19,7 +19,7 @@
       </template>
 
       <template v-slot:no-data>
-        <div>Список датчиков пуст</div>
+        <div>Список устройств пуст</div>
       </template>
     </v-data-table>
   </div>

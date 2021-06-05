@@ -1,6 +1,6 @@
 const headers = [
     {
-        text: "Название датчика",
+        text: "Название устройства",
         align: "start",
         value: "name",
     },   

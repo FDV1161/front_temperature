@@ -10,7 +10,7 @@
         {{ item.value }} 
         <span>({{ measure.symbol }})</span>
       </template> -->
-      <template v-slot:item.createdAt="{ item }">
+      <template v-slot:item.updatedAt="{ item }">
         {{ dateFormat(item) }}
       </template>
       <template v-slot:no-data>

@@ -4,7 +4,7 @@
     :valid="valid"
     @close="close"
     @save="save"
-    title="Редактирование датчика"
+    title="Редактирование устройства"
     saveTitle="Сохранить"
   >
     <v-form ref="deviceEditForm" v-model="valid">
@@ -229,7 +229,7 @@ export default {
         .then((responce) => {
           this.pushNotifications({
             type: "success",
-            message: "Датчик обновлен",
+            message: "Устройство обновлено",
           });
           this.$emit("save", responce.data);
         })

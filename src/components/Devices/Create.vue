@@ -4,7 +4,7 @@
     :valid="valid"
     @close="close"
     @save="save"
-    title="Добавление датчика"
+    title="Добавление устройства"
     saveTitle="Добавить"
   >
     <v-form ref="deviceCreateForm" v-model="valid">
@@ -234,7 +234,7 @@ export default {
           this.$refs.deviceCreateForm.reset();
           this.pushNotifications({
             type: "success",
-            message: "Датчик создан",
+            message: "Устройство создано",
           });
           this.$emit("save", responce.data);
         })

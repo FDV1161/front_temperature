@@ -2,35 +2,32 @@
   <div>
     <v-data-table
       :headers="headers"
-      :items="sensorsDataTable"
+      :items="getData"
       :search="search"
       hide-default-footer
       mobile-breakpoint="0"
     >
-      <template v-slot:item.actions="{ item }">
-        <div class="d-flex">
-          <v-btn icon small>
-            <v-icon small @click="editClick(item)"> mdi-pencil </v-icon>
-          </v-btn>
-          <v-btn icon small @click="deleteClick(item)">
-            <v-icon small> mdi-delete </v-icon>
-          </v-btn>
-        </div>
-      </template>
-
-      <template v-slot:item.name="{ item }">
+      <!-- <template v-slot:item.name="{ item }">
         <router-link
           :to="{ name: 'sensor', params: { id: item.id } }"
           class="table-link"
         >
           {{ item.name }}
         </router-link>
+      </template> -->
+
+      <!-- <template v-slot:item.value="{ item }">
+        {{getReadingById(item.deviceFunctions_id)}}
+      </template> -->
+
+      <template v-slot:item.reading.updatedAt="{ item }">
+        {{ dateFormat(item) }}
       </template>
 
       <template v-slot:no-data>
-        <div>Список датчиков пуст</div>
+        <div>Список устройств пуст</div>
       </template>
-    </v-data-table>
+    </v-data-table>   
   </div>
 </template>
 
@@ -38,35 +35,48 @@
 
 <script>
 import { headers } from "@/components/Devices/data.js";
+import { mapGetters } from 'vuex';
+// import { store } from 'vuex';
+import moment from "moment";
 
 export default {
-  props: ["sensors"],
+  props: ["devices"],
   data: () => ({
     search: "",
     headers: headers,
   }),
-  computed: {
-    sensorsDataTable() {
-      return this.sensors.map((s) => ({
-        id: s.id,
-        name: s.name,
-        address: s.address,
-        measure: this.getMeasureName(s),
-      }));
-    },
+  computed: {   
+    ...mapGetters({
+      getReadingById: 'currentReadings/getReadingById',     
+    }),
+    getData(){      
+      let new_devices = [];
+      for (let i = 0; i < this.devices.length; i++) {
+        const current_element = this.devices[i];        
+        current_element.deviceFunctions.forEach(df => {
+          let element = {};        
+          element.name = current_element.name;
+          element.func = df.func;
+          element.reading = this.getReadingById(df.id);
+          element.deviceFunctions_id = df.id;
+          if(df.func != null){
+            if (df.func.measureName != null){
+              let symbol = df.func.measureSymbol ? ` (${df.func.measureSymbol})` : "";
+              element.func_name = `${df.func.measureName}` + symbol;
+            }            
+          }
+          new_devices.push(element);
+        });        
+      }
+      return new_devices;
+    }
   },
   methods: {
-    getMeasureName(sensor) {
-      if (sensor.measure != null) {
-        return `${sensor.measure.name} (${sensor.measure.symbol})`;
-      }
+    dateFormat(item) {
+      if (item.reading != null ){
+        return moment(item.reading.updatedAt).format("MM.DD.YYYY hh:mm");
+      }      
       return "";
-    },
-    deleteClick(item) {
-      this.$emit("deleteClick", item);
-    },
-    editClick() {
-      this.$emit("editClick", item);
     },
   },
 };

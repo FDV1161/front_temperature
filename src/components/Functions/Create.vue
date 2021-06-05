@@ -4,7 +4,7 @@
     :valid="valid"
     @close="close"
     @save="save"
-    title="Добавление датчика"
+    title="Подключение функции"
     saveTitle="Добавить"
   >
     <v-form ref="deviceFunctionEditForm" v-model="valid">

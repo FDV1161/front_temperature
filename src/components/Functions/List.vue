@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col class="d-flex align-center field-hader">
-        <span>Список функций</span>
+        <span>Подключенные функции</span>
         <v-spacer></v-spacer>
         <v-btn
           icon
@@ -40,7 +40,7 @@
           </template>
 
           <template v-slot:no-data>
-            <div>Список функций</div>
+            <div>Список функций пуст</div>
           </template>
         </v-data-table>
       </v-col>

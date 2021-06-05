@@ -178,7 +178,7 @@ export default {
           });
           this.pushNotifications({
             type: "success",
-            message: "Устройство удален",
+            message: "Устройство удалено",
           });
           this.closeDeleteSensorDialog();
         })

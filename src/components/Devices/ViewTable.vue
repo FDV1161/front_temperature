@@ -7,14 +7,14 @@
       hide-default-footer
       mobile-breakpoint="0"
     >
-      <!-- <template v-slot:item.name="{ item }">
+      <template v-slot:item.name="{ item }">
         <router-link
-          :to="{ name: 'sensor', params: { id: item.id } }"
+          :to="{ name: 'devices', params: { id: item.device_id } }"
           class="table-link"
         >
           {{ item.name }}
         </router-link>
-      </template> -->
+      </template>
 
       <!-- <template v-slot:item.value="{ item }">
         {{getReadingById(item.deviceFunctions_id)}}
@@ -55,6 +55,7 @@ export default {
         const current_element = this.devices[i];        
         current_element.deviceFunctions.forEach(df => {
           let element = {};        
+          element.device_id = current_element.id;
           element.name = current_element.name;
           element.func = df.func;
           element.reading = this.getReadingById(df.id);

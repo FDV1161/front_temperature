@@ -76,7 +76,7 @@ export default {
                 ? "http://127.0.0.1:5000/static/" + device.icon
                 : require("@/assets/contactless-payment-circle-outline.png"),
               measureSymbol: df.func.measureSymbol,
-              type: Math.random() < 0.8,
+              type: df.func.minValue == 0 && df.func.maxValue == 1,              
             });
           }
         });

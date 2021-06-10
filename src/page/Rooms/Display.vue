@@ -34,13 +34,7 @@
     <div  v-for="device in room.devices" :key="device.id" >
       <v-subheader class="subtitle-1 font-weight-black">{{device.name}}</v-subheader>      
       <runner-field v-for="deviceFunction in device.deviceFunctions" :key="deviceFunction.id" :deviceFunction="deviceFunction" class="mx-2"/>
-    </div>    
-    
-    <v-row>
-      <v-col>
-        {{ room }}
-      </v-col>
-    </v-row>
+    </div>        
   </v-container>
 </template>
 

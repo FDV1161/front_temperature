@@ -3,6 +3,9 @@ export default function (instance) {
         getAll() {
             return instance.get('device')
         },
+        get(payload){
+            return instance.get('device/'+ payload)
+        },
         create(payload) {
             return instance.post('device', payload)
         },

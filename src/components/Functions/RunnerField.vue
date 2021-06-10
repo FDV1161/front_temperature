@@ -1,14 +1,14 @@
 <template>
   <v-row>
-    <v-col v-if="isSlider" class="">
+    <v-col v-if="!isSwitch" class="">
       <v-slider
         class="mx-4"
         thumb-label="always"
         v-model="value"
         :label="deviceFunction.func.name"
         ticks
-        max="100"
-        min="-100"
+        :max="deviceFunction.func.maxValue"
+        :min="deviceFunction.func.minValue"
       ></v-slider>
     </v-col>
     <v-col v-else class="d-flex justify-space-between align-center">
@@ -54,7 +54,7 @@
 export default {
   props: ["deviceFunction"],
   computed: {
-    isSlider() {
+    isSwitch() {
       return (
         this.deviceFunction.func.minValue == 0 &&
         this.deviceFunction.func.maxValue == 1

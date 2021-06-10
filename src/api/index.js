@@ -4,6 +4,7 @@ import devicesModule from './modules/devices';
 import controllersModule from './modules/controllers';
 import functionsModule from './modules/functions';
 import currentReadingsModule from './modules/current_readings';
+import journalReadingsModule from './modules/journal_readings';
 
 export default {  
     rooms: roomsModule(instance),
@@ -11,4 +12,5 @@ export default {
     controllers: controllersModule(instance),
     functions: functionsModule(instance),
     currentReadings: currentReadingsModule(instance),
+    journalReadings: journalReadingsModule(instance),
 }

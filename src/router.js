@@ -11,6 +11,7 @@ import Users from '@/page/Users.vue'
 import RoomDetailsPage from '@/page/Rooms/Display.vue'
 import EditRoom from '@/page/Rooms/Edit.vue'
 import CreateRoom from '@/page/Rooms/Create.vue'
+import Devices from '@/page/Devices/Display.vue'
 
 Vue.use(Router)
 
@@ -67,6 +68,11 @@ export default new Router({
             path: '/users',
             name: 'users',
             component: Users
+        },        
+        {            
+            path: '/devices/:id',
+            name: 'devices',
+            component: Devices
         },        
         {
             path: '*',

@@ -97,12 +97,7 @@
           </v-row>
         </v-expand-transition>
       </v-container>
-    </v-form>
-    <functions
-        :deviceFunctions="device.deviceFunctions"
-        @delete="deleteFunction"
-        @save="saveFunction"
-      />
+    </v-form>  
     <create-controller-dialog
       :dialog="controllerDialog"
       @close="controllerDialogClose"
@@ -118,15 +113,13 @@ import BaseDialog from "@/components/Base/Dialog.vue";
 import InputField from "@/components/Base/Fields/InputField.vue";
 import { console_print_error } from "@/utils/index";
 import { mapActions } from "vuex";
-import Functions from "@/components/Functions/List.vue";
 
 export default {
   props: ["dialog"],
   components: {
     CreateControllerDialog,
     BaseDialog,
-    InputField,
-    Functions
+    InputField,    
   },
   data() {
     return {
@@ -148,7 +141,6 @@ export default {
         description: "",
         address: null,
         controllerId: null,
-        deviceFunctions: [],
       },
     };
   },
@@ -181,18 +173,7 @@ export default {
   methods: {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
-    }),
-     deleteFunction(func) {     
-      const func_index =this.device.deviceFunctions.indexOf(func);
-      this.device.deviceFunctions.splice(func_index, 1);
-    },
-    saveFunction(func) {
-      const func_index =this.device.deviceFunctions.indexOf(func);
-      if (func_index >= 0){
-        this.device.deviceFunctions.splice(func_index, 1);
-      }      
-      this.device.deviceFunctions.push(func);
-    },
+    }),    
     selectFile(file) {
       this.icon = file;
       this.device.icon = URL.createObjectURL(file);
@@ -216,20 +197,10 @@ export default {
     close() {
       this.$refs.deviceCreateForm.reset();
       this.$emit("close");
-    },
-    prepare_request(){   
-      var request = Object.assign({}, this.device);
-      request.deviceFunctions = request.deviceFunctions.map(e => {
-        if (e.func != undefined){
-          e.idFunc = e.func.id;          
-        }
-        return e;
-      })
-      return request
-    },
+    },    
     createDevice() {
       this.$api.devices
-        .create(this.prepare_request())
+        .create(this.device)
         .then((responce) => {
           this.$refs.deviceCreateForm.reset();
           this.pushNotifications({

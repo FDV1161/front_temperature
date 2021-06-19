@@ -1,28 +1,28 @@
 <template>
   <base-dialog
-    :dialog="dialog"
-    :valid="valid"
-    @close="close"
-    @save="save"
-    title="Редактирование устройства"
-    saveTitle="Сохранить"
+      :dialog="dialog"
+      :valid="valid"
+      @close="close"
+      @save="save"
+      title="Редактирование устройства"
+      saveTitle="Сохранить"
   >
     <v-form ref="deviceEditForm" v-model="valid">
       <v-container fluid>
-        <input-field v-model="device.name" label="Название" required />
-        <input-field v-model="device.description" label="Описание" />
+        <input-field v-model="device.name" label="Название" required/>
+        <input-field v-model="device.description" label="Описание"/>
 
         <v-row>
           <v-col>
             <v-file-input
-              id="fileUpload"
-              v-bind="icon"
-              @change="selectFile"
-              v-show="false"
+                id="fileUpload"
+                v-bind="icon"
+                @change="selectFile"
+                v-show="false"
             ></v-file-input>
             <v-btn tile @click="chooseFiles">Загрузить иконку</v-btn>
             <v-btn icon @click="deleteIcon" v-show="icon || this.device.icon">
-              <v-icon color="red"> mdi-delete </v-icon>
+              <v-icon color="red"> mdi-delete</v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -38,9 +38,9 @@
                 :src="icon_url"
               ></v-img> -->
               <img
-                class="size-images"
-                :lazy-src="icon_url"                          
-                :src="icon_url"
+                  class="size-images"
+                  :lazy-src="icon_url"
+                  :src="icon_url"
               ></img>
             </v-btn>
           </v-col>
@@ -50,20 +50,20 @@
           <v-col>
             <div class="d-flex">
               <v-select
-                :items="controllers"
-                menu-props="auto"
-                label="Контроллер"
-                item-value="id"
-                item-text="name"
-                v-model="device.controllerId"
-                clearable
+                  :items="controllers"
+                  menu-props="auto"
+                  label="Контроллер"
+                  item-value="id"
+                  item-text="name"
+                  v-model="device.controllerId"
+                  clearable
               ></v-select>
               <v-btn
-                icon
-                min-height="48"
-                min-width="48"
-                tile
-                @click="controllerDialog = true"
+                  icon
+                  min-height="48"
+                  min-width="48"
+                  tile
+                  @click="controllerDialog = true"
               >
                 <v-icon dark>mdi-plus</v-icon>
               </v-btn>
@@ -76,25 +76,25 @@
               <v-row>
                 <v-col>
                   <v-text-field
-                    label="Название"
-                    :value="controller.name"
-                    disabled
+                      label="Название"
+                      :value="controller.name"
+                      disabled
                   ></v-text-field>
                 </v-col>
                 <v-col>
                   <v-text-field
-                    label="Адрес"
-                    :value="controller.address"
-                    disabled
+                      label="Адрес"
+                      :value="controller.address"
+                      disabled
                   ></v-text-field>
                 </v-col>
               </v-row>
               <v-row>
                 <v-col>
                   <v-text-field
-                    label="Описание"
-                    :value="controller.description"
-                    disabled
+                      label="Описание"
+                      :value="controller.description"
+                      disabled
                   ></v-text-field>
                 </v-col>
               </v-row>
@@ -103,15 +103,17 @@
         </v-expand-transition>
       </v-container>
       <functions
-        :deviceFunctions="device.deviceFunctions"
-        @delete="deleteFunction"
-        @save="saveFunction"
+          :deviceFunctions="device.deviceFunctions"
+          :deviceId="device.id"
+          @delete="deleteFunction"
+          @save="saveDeviceFunction"
+          @update="updateDeviceFunction"
       />
     </v-form>
     <create-controller-dialog
-      :dialog="controllerDialog"
-      @close="controllerDialogClose"
-      @save="controllerDialogSave"
+        :dialog="controllerDialog"
+        @close="controllerDialogClose"
+        @save="controllerDialogSave"
     />
   </base-dialog>
 </template>
@@ -120,9 +122,9 @@
 <script>
 import CreateControllerDialog from "@/components/Controllers/Create.vue";
 import BaseDialog from "@/components/Base/Dialog.vue";
-import { console_print_error } from "@/utils/index";
+import {console_print_error} from "@/utils/index";
 import InputField from "@/components/Base/Fields/InputField.vue";
-import { mapActions } from "vuex";
+import {mapActions} from "vuex";
 import Functions from "@/components/Functions/List.vue";
 
 export default {
@@ -156,7 +158,7 @@ export default {
         return "http://127.0.0.1:5000/static/" + this.device.icon;
       }
       return "none";
-    },    
+    },
   },
 
   watch: {
@@ -178,22 +180,28 @@ export default {
       pushNotifications: "notifications/push_notifications",
     }),
     deleteFunction(func) {
-      // console.log("i am run delete");
-      // console.log(func);
-      // this.device.deviceFunctions = this.device.deviceFunctions.filter(
-      //   (item) => {
-      //     return item.id != func.id;
-      //   }
-      // );
-      const func_index =this.device.deviceFunctions.indexOf(func);
-      this.device.deviceFunctions.splice(func_index, 1);
+      console.log(func);
+      this.device.deviceFunctions = this.device.deviceFunctions.filter(df => {
+        return df.id !== func.id;
+      })
     },
-    saveFunction(func) {
-      const func_index =this.device.deviceFunctions.indexOf(func);
-      if (func_index >= 0){
-        this.device.deviceFunctions.splice(func_index, 1);
-      }      
-      this.device.deviceFunctions.push(func);
+    saveDeviceFunction(deviceFunction) {
+      this.device.deviceFunctions.push(deviceFunction);
+    },
+    updateDeviceFunction(deviceFunction) {
+      this.device.deviceFunctions = this.device.deviceFunctions.filter(df => {
+        return df.id !== deviceFunction.id;
+      });
+      this.device.deviceFunctions.push(deviceFunction);
+      this.device.deviceFunctions.sort((df1, df2) => {
+        if(df1.id < df2.id){
+          return -1
+        } else if (df1.id > df2.id){
+          return 1
+        } else{
+          return 0
+        }
+      })
     },
     selectFile(file) {
       if (file != null) {
@@ -212,10 +220,10 @@ export default {
     close() {
       this.$emit("close");
     },
-    prepare_request(){   
+    prepare_request() {
       var request = Object.assign({}, this.device);
       request.deviceFunctions = request.deviceFunctions.map(e => {
-        if (e.func != undefined){
+        if (e.func != undefined) {
           e.idFunc = e.func.id;
           e.idDevice = this.device.id;
         }
@@ -225,21 +233,21 @@ export default {
     },
     updateDevice() {
       this.$api.devices
-        .update(this.prepare_request())
-        .then((responce) => {
-          this.pushNotifications({
-            type: "success",
-            message: "Устройство обновлено",
+          .update(this.prepare_request())
+          .then((responce) => {
+            this.pushNotifications({
+              type: "success",
+              message: "Устройство обновлено",
+            });
+            this.$emit("save", responce.data);
+          })
+          .catch((error) => {
+            this.pushNotifications({
+              type: "error",
+              message: error.response.data,
+            });
+            console_print_error(error);
           });
-          this.$emit("save", responce.data);
-        })
-        .catch((error) => {
-          this.pushNotifications({
-            type: "error",
-            message: error.response.data,
-          });
-          console_print_error(error);
-        });
     },
     save() {
       if (this.iconChanged) {
@@ -269,11 +277,12 @@ export default {
 .field-hader {
   height: 90px;
 }
-.size-images{
+
+.size-images {
   width: 48px;
   height: 48px;
   max-height: 48px;
-  max-width: 48px;  
+  max-width: 48px;
   background-color: #E0E0E0;
 }
 </style>

@@ -126,8 +126,8 @@ export default {
   },
 
   created() {
-    this.$api.rooms.getRooms().then((responce) => {
-      this.loadRooms(responce.data);
+    this.$api.rooms.getRooms().then(response => {
+      this.loadRooms(response.data);
     });
   },
 

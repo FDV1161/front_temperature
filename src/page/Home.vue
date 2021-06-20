@@ -3,47 +3,45 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12" sm="6" md="3" v-for="room in rooms" :key="room.id">
-          <Card :data="room" />
+          <Card :room="room"/>
         </v-col>
       </v-row>
-      
     </v-container>
   </div>
 </template>
 
 <script>
-import Card from "@/components/Home/Card";
-import api from "@/api/index";
+import Card from "../components/Home/Card";
 
 export default {
-  data: () => ({
-    rooms: null,
-  }),
+  data(){
+    return {
+      // rooms: {
+      //   id: null,
+      //   name: null,
+      //   currentValues: [
+      //     {
+      //       id: null,
+      //       minValue: null,
+      //       maxValue: null,
+      //       icon: null,
+      //       measureSymbol: null,
+      //       writeEnable: null,
+      //       cur_val: null
+      //     }
+      //   ]
+      // },
+      rooms: null,
+    }
+  },
   components: {
     Card,
   },
   created() {
-    this.LoadRoom();
-  },
-  methods: {
-    LoadRoom: function () {
-      api.rooms.getRooms().then((responce) => {
-        // this.rooms = responce.data;
-        this.rooms = responce.data.filter((room) => {
-          let result = false;          
-          if ("devices" in room) {
-            result = room.devices.some((device) => {              
-              if ("deviceFunctions" in device) {
-                return device.deviceFunctions.some((df) => {
-                    return df.onHome;                                     
-                });
-              }          
-            });           
-          }         
-          return result;
-        });        
-      });
-    },
+    this.$api.home.getCurrentReadings()
+        .then(response => {
+          this.rooms = response.data;
+        })
   },
 };
 </script>

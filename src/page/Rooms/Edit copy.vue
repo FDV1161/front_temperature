@@ -26,7 +26,7 @@
       <input-field v-model="room.description" label="Описание" />
 
       <v-row>
-        <v-col class="d-flex align-center field-hader">
+        <v-col class="d-flex align-center field-header">
           <span>Список устройств</span>
           <v-spacer></v-spacer>
           <v-btn
@@ -191,7 +191,7 @@ export default {
 </script>
 
 <style scoped>
-.field-hader {
+.field-header {
   height: 90px;
 }
 </style>

@@ -234,7 +234,7 @@ export default {
 
 
 <style scoped>
-.field-hader {
+.field-header {
   height: 90px;
 }
 </style>

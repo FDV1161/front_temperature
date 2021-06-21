@@ -1,10 +1,5 @@
 const headers = [
     {
-        text: "id",
-        align: "start",
-        value: "deviceFunctions_id",
-    },
-    {
         text: "Название устройства",
         align: "start",
         value: "name",
@@ -12,17 +7,17 @@ const headers = [
     {
         text: "Физическая величина",
         align: "start",
-        value: "func_name",
+        value: "measure",
     },    
     {
         text: "Дата обновления",
         align: "start",
-        value: "reading.updatedAt",
+        value: "updatedAt",
     },    
     {
         text: "Показания",
         align: "start",
-        value: "reading.value",
+        value: "value",
     },
     
 ];

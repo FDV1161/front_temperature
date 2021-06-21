@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col class="d-flex align-center field-hader">
+      <v-col class="d-flex align-center field-header">
         <span>Подключенные функции</span>
         <v-spacer></v-spacer>
         <v-btn

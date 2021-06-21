@@ -5,49 +5,38 @@
         <v-toolbar flat>
           <v-toolbar-title>Просмотр аудитории</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn class="mr-2" text tile @click="$router.go(-1)"> Назад </v-btn>
+          <v-btn class="mr-2" text tile @click="$router.go(-1)">Назад</v-btn>
         </v-toolbar>
       </v-col>
     </v-row>
 
-    <input-field v-model="room.name" label="Название" readonly />
-    <input-field v-model="room.description" label="Описание" readonly />
+    <input-field v-model="room.name" label="Название" readonly/>
+    <input-field v-model="room.description" label="Описание" readonly/>
+    <current-device-values :devices="room.devices" class="px-0"/>
 
     <v-row>
-      <v-col class="d-flex align-center field-hader">
-        <span>Текущие показания</span>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <table-sensors :devices="room.devices" />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="d-flex align-center field-hader">
+      <v-col class="d-flex align-center field-header">
         <span>Запуск функций</span>
       </v-col>
     </v-row>
-    <div>
-    </div>    
-
-    <div  v-for="device in room.devices" :key="device.id" >
-      <v-subheader class="subtitle-1 font-weight-black">{{device.name}}</v-subheader>      
-      <runner-field v-for="deviceFunction in device.deviceFunctions" :key="deviceFunction.id" :deviceFunction="deviceFunction" class="mx-2"/>
-    </div>        
+    <div v-for="device in room.devices" :key="device.id">
+      <v-subheader class="subtitle-1 font-weight-black">{{ device.name }}</v-subheader>
+      <runner-field v-for="deviceFunction in device.deviceFunctions" :key="deviceFunction.id"
+                    :deviceFunction="deviceFunction" class="mx-2"/>
+    </div>
   </v-container>
 </template>
 
 <script>
-import api from "@/api/index";
-import TableSensors from "@/components/Devices/ViewTable.vue";
-import InputField from "@/components/Base/Fields/InputField.vue";
-import { mapActions } from "vuex";
-import RunnerField from "@/components/Functions/RunnerField.vue";
+
+import CurrentDeviceValues from "../../components/Devices/CurrentValues.vue";
+import InputField from "../../components/Base/Fields/InputField.vue";
+import RunnerField from "../../components/Functions/RunnerField.vue";
+import {mapActions} from "vuex";
 
 export default {
   components: {
-    TableSensors,
+    CurrentDeviceValues,
     InputField,
     RunnerField
   },
@@ -60,61 +49,26 @@ export default {
         description: "",
         devices: []
       },
-      // room: {
-      //   name: "",
-      //   description: "",
-      //   id: null,
-      //   devices: [
-      //     {
-      //       name: "12312",
-      //       roomId: 1,
-      //       controllerId: 1,
-      //       description: "",
-      //       icon: "253124531_lamp_1.svg",
-      //       deviceFunctions: [
-      //         {
-      //           id: 7,
-      //           func: {
-      //             id: 5,
-      //             name: "Управление температурой",
-      //             measureSymbol: "℃",
-      //           },
-      //           idDevice: 17,
-      //           address: 12312,
-      //           onHome: true,
-      //         },
-      //       ],
-      //       id: 17,
-      //     },
-      //   ],
-      // },
     };
   },
 
-  mounted() {
-    this.loadRoom();
+  created() {
+    this.$api.rooms.getRoom(this.$route.params.id).then(response => {
+      this.room = response.data;
+      console.log(response.data)
+    });
   },
 
-  computed: {},
-
   methods: {
-     ...mapActions({
-      loadCurrentReadings: 'currentReadings/loadCurrentReadings',     
+    ...mapActions({
+      loadCurrentReadings: 'currentReadings/loadCurrentReadings',
     }),
-    loadRoom: function () {
-      api.rooms.getRoom(this.$route.params.id).then((responce) => {
-        this.room = responce.data;
-      });
-      api.currentReadings.getAll().then(responce => {
-        this.loadCurrentReadings(responce.data);
-      })  
-    },
   },
 };
 </script>
 
 <style scoped>
-.field-hader {
+.field-header {
   height: 90px;
 }
 </style>

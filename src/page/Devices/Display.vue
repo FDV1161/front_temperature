@@ -5,38 +5,53 @@
         <v-toolbar flat>
           <v-toolbar-title>Просмотр устройства</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn class="mr-2" text tile @click="$router.go(-1)"> Назад </v-btn>
+          <v-btn class="mr-2" text tile @click="$router.go(-1)"> Назад</v-btn>
         </v-toolbar>
       </v-col>
     </v-row>
 
-    <input-field v-model="device.name" label="Название" readonly />
-    <input-field v-model="device.description" label="Описание" readonly />
+    <input-field v-model="device.name" label="Название" readonly/>
+    <input-field v-model="device.description" label="Описание" readonly/>
+
+
     <v-data-table
-      v-for="(item, key) in journalReadings"
-      :key="key"
-      :headers="headers"
-      :items="item"
-      :items-per-page="5"
-      class="elevation-1"      
+        :headers="headers"
+        :items="journalReadings"
+        :options.sync="options"
+        :server-items-length="rowCount"
+        :loading="loading"
+        :items-per-page="10"
+        :footer-props="{'items-per-page-options': [10, 20, 50, 100]}"
+        class="elevation-1"
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title class="subtitle-1 font-weight-regular"> {{getName(key)}}</v-toolbar-title>          
+          <v-toolbar-title class="subtitle-1 font-weight-regular">
+            История показаний
+          </v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-select
+              :items="device.deviceFunctions"
+              menu-props="auto"
+              label="Функции"
+              item-value="id"
+              item-text="func.name"
+              v-on:change="selectDeviceFunction"
+              :value="selectedDeviceFunction"
+              clearable
+          ></v-select>
         </v-toolbar>
       </template>
 
       <template v-slot:item.updatedAt="{ item }">
-        {{ dateFormat(item) }}
+        {{ dateFormat(item.updatedAt) }}
       </template>
     </v-data-table>
   </v-container>
 </template>
 
 <script>
-import api from "@/api/index";
-import InputField from "@/components/Base/Fields/InputField.vue";
-import { mapActions } from "vuex";
+import InputField from "../../components/Base/Fields/InputField.vue";
 import moment from "moment";
 
 export default {
@@ -54,47 +69,63 @@ export default {
         controllerId: null,
         deviceFunctions: [],
       },
-      journalReadings: {},
+      options: {},
+      journalReadings: [],
+      selectedDeviceFunction: null,
+      rowCount: 0,
+      loading: false,
       headers: [
-        { text: "Дата", value: "updatedAt" },
-        { text: "Показания", value: "value" },
+        {text: "Дата", value: "updatedAt"},
+        {text: "Показания", value: "value"},
       ],
     };
   },
 
+  watch: {
+    options: {
+      handler() {
+        this.loadDeviceFunctionValues();
+      },
+      deep: true,
+    },
+  },
+
   created() {
-    this.$api.devices.get(this.$route.params.id).then((responce) => {
-      this.device = responce.data;
-      this.device.deviceFunctions.forEach((element) => {
-        this.$api.journalReadings.getAll(element.id).then((responce) => {
-          if (responce.data.length != 0) {
-            this.journalReadings = Object.assign(this.journalReadings, {
-              [element.id]: responce.data,
-            });
-            this.$forceUpdate();
-          }
-        });
-      });
+    this.$api.devices.get(this.$route.params.id).then(response => {
+      this.device = response.data;
+      if(this.device.deviceFunctions){
+        this.selectDeviceFunction(this.device.deviceFunctions[0].id);
+      }
     });
   },
 
   computed: {},
 
   methods: {
-    getName(id)
-    {        
-        try {
-            return this.device.deviceFunctions.find(e => e.id=id).func.name;
-        } catch (err) {
-            return ""
-        }
+    selectDeviceFunction(selectedDeviceFunction) {
+      this.selectedDeviceFunction = selectedDeviceFunction;
+      this.loadDeviceFunctionValues()
     },
-    dateFormat(item) {
-      console.log(item);
-      if (item != null) {
-        return moment(item.updatedAt).format("MM.DD.YYYY hh:mm");
+
+    loadDeviceFunctionValues() {
+      if (!this.selectedDeviceFunction) {
+        return;
       }
-      return "";
+      this.loading = true;
+      const {sortBy, sortDesc, page, itemsPerPage} = this.options;
+      this.$api.journalReadings.getAll({
+        deviceFuncId: this.selectedDeviceFunction,
+        paginatePage: page,
+        paginationCount: itemsPerPage,
+      }).then(response => {
+        this.journalReadings = response.data.values;
+        this.rowCount = response.data.rowCount;
+        this.loading = false;
+      });
+    },
+
+    dateFormat(date) {
+      return moment(date).format("MM.DD.YYYY hh:mm");
     },
   },
 };

@@ -180,7 +180,6 @@ export default {
       pushNotifications: "notifications/push_notifications",
     }),
     deleteFunction(func) {
-      console.log(func);
       this.device.deviceFunctions = this.device.deviceFunctions.filter(df => {
         return df.id !== func.id;
       })

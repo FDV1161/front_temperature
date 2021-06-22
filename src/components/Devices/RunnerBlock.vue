@@ -27,13 +27,11 @@ export default {
       for (let device of this.room.devices) {
         for (let df of device.deviceFunctions) {
           if (df.writeEnable) {
-            console.log("as");
             writeableDevices.push(device);
             break;
           }
         }
       }
-      console.log(writeableDevices);
       return writeableDevices;
     }
   },

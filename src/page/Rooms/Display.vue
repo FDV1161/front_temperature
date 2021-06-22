@@ -46,7 +46,6 @@ export default {
   created() {
     this.$api.rooms.getRoom(this.$route.params.id).then(response => {
       this.room = response.data;
-      console.log(response.data)
     });
   },
 

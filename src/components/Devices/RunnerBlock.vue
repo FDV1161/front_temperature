@@ -7,7 +7,7 @@
     </v-row>
     <div v-for="device in writeableDevices" :key="device.id">
       <v-subheader class="subtitle-1 font-weight-black">{{ device.name }}</v-subheader>
-      <runner-field v-for="df in device.deviceFunctions" :key="df.id" :deviceFunction="df" class="mx-2"/>
+      <runner-field v-for="df in device.deviceFunctions" :key="df.id" :deviceFunction="df" v-if="df.writeEnable" class="mx-2"/>
     </div>
   </v-container>
 </template>

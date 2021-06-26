@@ -9,5 +9,8 @@ export default function (instance) {
         update(payload) {
             return instance.put('device_functions/' + payload.id, payload)
         },
+        run(payload){
+            return instance.post('device_functions/run', payload)
+        }
     }
 }

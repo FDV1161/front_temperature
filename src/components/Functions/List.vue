@@ -160,7 +160,14 @@ export default {
       this.dialogs.delete = true;
     },
     choiceEditItem(item) {
-      this.activeItem = item;
+      let editItem = {
+        id: item.id,
+        address: item.address,
+        idFunc: item.func.id,
+        onHome: item.onHome,
+        writeEnable: item.writeEnable,
+      }
+      this.activeItem = Object.assign({}, editItem);
       this.dialogs.editDeviceFunction = true;
     },
     deleteItem() {

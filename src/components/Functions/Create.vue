@@ -62,7 +62,6 @@ export default {
         address: "",
         onHome: false,
         idFunc: null,
-        idDevice: this.deviceId,
         writeEnable: false,
       }
     };
@@ -83,7 +82,7 @@ export default {
       this.$refs.deviceFunctionCreateForm.reset();
     },
     save() {
-      this.$api.deviceFunctions.create(this.deviceFunction)
+      this.$api.deviceFunctions.create(Object.assign({}, {idDevice: this.deviceId}, this.deviceFunction))
           .then(response => {
             this.$refs.deviceFunctionCreateForm.reset();
             this.pushNotifications({

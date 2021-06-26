@@ -6,7 +6,7 @@
     <v-spacer></v-spacer>
     <v-col cols="4" class="d-flex justify-end">
       <v-switch
-          :value="value"
+          :input-value="value"
           @change="(v) => $emit('change', v)"
           :class="{ required: required }"
           :rules="rules"
@@ -34,7 +34,7 @@ export default {
   computed: {
     rules() {
       return [
-        ...(this.required == true
+        ...(this.required === true
             ? [(value) => !!value || "Обязательное поле"]
             : []),
       ];

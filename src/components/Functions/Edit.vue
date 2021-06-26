@@ -9,9 +9,9 @@
   >
     <v-form ref="deviceFunctionEditForm" v-model="valid">
       <v-container fluid>
-        <input-field v-model="editDeviceFunction.address" label="Адрес" required/>
-        <switch-field v-model="editDeviceFunction.onHome" label="Показывать на главном экране"/>
-        <switch-field v-model="editDeviceFunction.writeEnable" label="Разрешено исполнять"/>
+        <input-field v-model="deviceFunction.address" label="Адрес" required/>
+        <switch-field v-model="deviceFunction.onHome" label="Показывать на главном экране"/>
+        <switch-field v-model="deviceFunction.writeEnable" label="Разрешено исполнять"/>
         <v-row>
           <v-col>
             <div class="d-flex">
@@ -21,7 +21,7 @@
                   label="Функция"
                   item-value="id"
                   item-text="name"
-                  v-model="editDeviceFunction.idFunc"
+                  v-model="deviceFunction.idFunc"
                   clearable
                   class="required"
                   :rules="[(value) => !!value || 'Обязательное поле']"
@@ -39,7 +39,7 @@
 import BaseDialog from "../../components/Base/Dialog.vue";
 import InputField from "../../components/Base/Fields/InputField.vue";
 import SwitchField from "../../components/Base/Fields/SwitchField";
-import {console_print_error} from "@/utils/index";
+import {console_print_error} from "../../utils/index";
 import {mapActions} from "vuex";
 
 export default {
@@ -50,7 +50,13 @@ export default {
   },
 
   props: {
-    deviceFunction: Object,
+    deviceFunction: {
+      id: null,
+      address: null,
+      idFunc: null,
+      onHome: false,
+      writeEnable: false,
+    },
     dialog: Boolean,
   },
 
@@ -58,24 +64,7 @@ export default {
     return {
       valid: false,
       functions: [],
-      editDeviceFunction: {
-        address: "",
-        onHome: false,
-        idFunc: null,
-        idDevice: null,
-        writeEnable: false,
-      }
     };
-  },
-
-  watch: {
-    "dialog": function (new_val) {
-      console.log(this.deviceFunction);
-      const editDeviceFunction = JSON.parse(JSON.stringify(this.deviceFunction));
-      console.log(editDeviceFunction);
-      this.editDeviceFunction = Object.assign({}, editDeviceFunction);
-      this.editDeviceFunction.idFunc = this.deviceFunction.func.id;
-    },
   },
 
   created() {
@@ -93,14 +82,14 @@ export default {
       this.$refs.deviceFunctionEditForm.reset();
     },
     save() {
-      this.$api.deviceFunctions.update(this.editDeviceFunction)
+      this.$api.deviceFunctions.update(this.deviceFunction)
           .then(response => {
-            this.$refs.deviceFunctionEditForm.reset();
             this.pushNotifications({
               type: "success",
               message: "Функция обновлена",
             });
             this.$emit("save", response.data);
+            this.$refs.deviceFunctionEditForm.reset();
           })
           .catch((error) => {
             this.pushNotifications({

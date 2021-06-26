@@ -10,17 +10,8 @@
     <v-form ref="deviceFunctionEditForm" v-model="valid">
       <v-container fluid>
         <input-field v-model="editDeviceFunction.address" label="Адрес" required/>
-
-        <v-row>
-          <v-col cols="8" class="d-flex align-center">
-            <span>Показывать на главном экране</span>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="4" class="d-flex justify-end">
-            <v-switch v-model="editDeviceFunction.onHome"></v-switch>
-          </v-col>
-        </v-row>
-
+        <switch-field v-model="editDeviceFunction.onHome" label="Показывать на главном экране"/>
+        <switch-field v-model="editDeviceFunction.writeEnable" label="Разрешено исполнять"/>
         <v-row>
           <v-col>
             <div class="d-flex">
@@ -47,6 +38,7 @@
 <script>
 import BaseDialog from "../../components/Base/Dialog.vue";
 import InputField from "../../components/Base/Fields/InputField.vue";
+import SwitchField from "../../components/Base/Fields/SwitchField";
 import {console_print_error} from "@/utils/index";
 import {mapActions} from "vuex";
 
@@ -54,6 +46,7 @@ export default {
   components: {
     BaseDialog,
     InputField,
+    SwitchField
   },
 
   props: {
@@ -69,14 +62,17 @@ export default {
         address: "",
         onHome: false,
         idFunc: null,
-        idDevice: null
+        idDevice: null,
+        writeEnable: false,
       }
     };
   },
 
   watch: {
     "dialog": function (new_val) {
+      console.log(this.deviceFunction);
       const editDeviceFunction = JSON.parse(JSON.stringify(this.deviceFunction));
+      console.log(editDeviceFunction);
       this.editDeviceFunction = Object.assign({}, editDeviceFunction);
       this.editDeviceFunction.idFunc = this.deviceFunction.func.id;
     },

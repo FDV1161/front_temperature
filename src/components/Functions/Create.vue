@@ -10,16 +10,8 @@
     <v-form ref="deviceFunctionCreateForm" v-model="valid">
       <v-container fluid>
         <input-field v-model="deviceFunction.address" label="Адрес" required/>
-
-        <v-row>
-          <v-col cols="8" class="d-flex align-center">
-            <span>Показывать на главном экране</span>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="4" class="d-flex justify-end">
-            <v-switch v-model="deviceFunction.onHome"></v-switch>
-          </v-col>
-        </v-row>
+        <switch-field v-model="deviceFunction.onHome" label="Показывать на главном экране"/>
+        <switch-field v-model="deviceFunction.writeEnable" label="Разрешено исполнять"/>
 
         <v-row>
           <v-col>
@@ -46,6 +38,7 @@
 <script>
 import BaseDialog from "../../components/Base/Dialog.vue";
 import InputField from "../../components/Base/Fields/InputField.vue";
+import SwitchField from "../../components/Base/Fields/SwitchField";
 import {console_print_error} from "../../utils/index";
 import {mapActions} from "vuex";
 
@@ -53,6 +46,7 @@ export default {
   components: {
     BaseDialog,
     InputField,
+    SwitchField
   },
 
   props: {
@@ -69,6 +63,7 @@ export default {
         onHome: false,
         idFunc: null,
         idDevice: this.deviceId,
+        writeEnable: false,
       }
     };
   },

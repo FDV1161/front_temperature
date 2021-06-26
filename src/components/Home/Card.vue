@@ -67,7 +67,7 @@ export default {
 
   methods: {
     to_image(icon) {
-      return icon ? "http://127.0.0.1:5000/static/" + icon : require("../../assets/contactless-payment-circle-outline.png")
+      return icon ? this.$settings.baseIconURL + icon : require("../../assets/contactless-payment-circle-outline.png")
     }
   }
 };

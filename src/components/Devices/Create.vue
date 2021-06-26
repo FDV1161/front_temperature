@@ -156,7 +156,7 @@ export default {
       if (this.icon != null) {
         return this.device.icon;
       } else if (this.device.icon != null) {
-        return "http://127.0.0.1:5000/static/" + this.device.icon;
+        return this.$settings.baseIconURL + this.device.icon;
       }
       return "none";
     },

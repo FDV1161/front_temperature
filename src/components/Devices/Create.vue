@@ -113,6 +113,7 @@ import BaseDialog from "@/components/Base/Dialog.vue";
 import InputField from "@/components/Base/Fields/InputField.vue";
 import { console_print_error } from "@/utils/index";
 import { mapActions } from "vuex";
+import {ImageURL} from "../../settings";
 
 export default {
   props: ["dialog"],
@@ -156,7 +157,7 @@ export default {
       if (this.icon != null) {
         return this.device.icon;
       } else if (this.device.icon != null) {
-        return this.$settings.baseIconURL + this.device.icon;
+        return ImageURL + this.device.icon;
       }
       return "none";
     },

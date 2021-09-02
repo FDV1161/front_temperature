@@ -122,10 +122,11 @@
 <script>
 import CreateControllerDialog from "@/components/Controllers/Create.vue";
 import BaseDialog from "@/components/Base/Dialog.vue";
-import {console_print_error} from "@/utils/index";
+import { console_print_error } from "@/utils/index";
 import InputField from "@/components/Base/Fields/InputField.vue";
-import {mapActions} from "vuex";
+import { mapActions } from "vuex";
 import Functions from "@/components/Functions/List.vue";
+import { ImageURL } from "../../settings";
 
 export default {
   props: ["device", "dialog"],
@@ -155,7 +156,7 @@ export default {
       if (this.icon != null) {
         return this.device.icon;
       } else if (this.device.icon != null) {
-        return this.$settings.baseIconURL + this.device.icon;
+        return ImageURL + this.device.icon;
       }
       return "none";
     },
@@ -180,27 +181,27 @@ export default {
       pushNotifications: "notifications/push_notifications",
     }),
     deleteFunction(func) {
-      this.device.deviceFunctions = this.device.deviceFunctions.filter(df => {
+      this.device.deviceFunctions = this.device.deviceFunctions.filter((df) => {
         return df.id !== func.id;
-      })
+      });
     },
     saveDeviceFunction(deviceFunction) {
       this.device.deviceFunctions.push(deviceFunction);
     },
     updateDeviceFunction(deviceFunction) {
-      this.device.deviceFunctions = this.device.deviceFunctions.filter(df => {
+      this.device.deviceFunctions = this.device.deviceFunctions.filter((df) => {
         return df.id !== deviceFunction.id;
       });
       this.device.deviceFunctions.push(deviceFunction);
       this.device.deviceFunctions.sort((df1, df2) => {
-        if(df1.id < df2.id){
-          return -1
-        } else if (df1.id > df2.id){
-          return 1
-        } else{
-          return 0
+        if (df1.id < df2.id) {
+          return -1;
+        } else if (df1.id > df2.id) {
+          return 1;
+        } else {
+          return 0;
         }
-      })
+      });
     },
     selectFile(file) {
       if (file != null) {
@@ -221,32 +222,32 @@ export default {
     },
     prepare_request() {
       var request = Object.assign({}, this.device);
-      request.deviceFunctions = request.deviceFunctions.map(e => {
+      request.deviceFunctions = request.deviceFunctions.map((e) => {
         if (e.func != undefined) {
           e.idFunc = e.func.id;
           e.idDevice = this.device.id;
         }
         return e;
-      })
-      return request
+      });
+      return request;
     },
     updateDevice() {
       this.$api.devices
-          .update(this.prepare_request())
-          .then((responce) => {
-            this.pushNotifications({
-              type: "success",
-              message: "Устройство обновлено",
-            });
-            this.$emit("save", responce.data);
-          })
-          .catch((error) => {
-            this.pushNotifications({
-              type: "error",
-              message: error.response.data,
-            });
-            console_print_error(error);
+        .update(this.prepare_request())
+        .then((responce) => {
+          this.pushNotifications({
+            type: "success",
+            message: "Устройство обновлено",
           });
+          this.$emit("save", responce.data);
+        })
+        .catch((error) => {
+          this.pushNotifications({
+            type: "error",
+            message: error.response.data,
+          });
+          console_print_error(error);
+        });
     },
     save() {
       if (this.iconChanged) {
@@ -282,6 +283,6 @@ export default {
   height: 48px;
   max-height: 48px;
   max-width: 48px;
-  background-color: #E0E0E0;
+  background-color: #e0e0e0;
 }
 </style>

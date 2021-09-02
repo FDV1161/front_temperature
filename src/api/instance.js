@@ -1,8 +1,8 @@
 import axios from 'axios'
+import {baseURL} from '../settings'
 
-const instance = axios.create({
-    // baseURL: "http://10.8.0.42:8000/",
-    baseURL: "http://192.168.0.135:5000",
+const instance = axios.create({    
+    baseURL: baseURL,
     withCredentials: false,
     headers: {
         'Accept': 'application/json',

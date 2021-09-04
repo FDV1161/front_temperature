@@ -3,8 +3,8 @@ export default {
     state: {
         rooms: []
     },
-    getters: {
-
+    getters: {        
+        getRooms: state => state.rooms,
     },
     mutations: {
         LOAD_ROOMS(state, payload) {

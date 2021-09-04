@@ -26,7 +26,7 @@
                     hide-details
                     class="mr-5"
                   ></v-text-field>
-                  <v-btn icon tile router to="/create-room">
+                  <v-btn icon tile router to="/create-room" v-if="[EDITOR, ADMIN].includes(user.group.id)">
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
                 </v-toolbar>
@@ -43,7 +43,7 @@
             </router-link>
           </template>
 
-          <template v-slot:item.actions="{ item }">
+          <template v-slot:item.actions="{ item }" v-if="[EDITOR, ADMIN].includes(user.group.id)">
             <div class="d-flex">
               <v-btn
                 icon
@@ -66,6 +66,7 @@
       </v-col>
     </v-row>
     <delete-dialog
+      v-if="[EDITOR, ADMIN].includes(user.group.id)"
       :dialog="dialogs.delete"
       :name="deleteName"
       @close="closeDeleteDialog"
@@ -79,8 +80,9 @@
 <script>
 import CreateRoomModal from "@/components/Rooms/Create.vue";
 import DeleteDialog from "@/components/Base/DeleteDialog.vue";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { console_print_error } from "@/utils/index";
+import {ADMIN, VIEWER, EDITOR} from "../../settings"
 
 export default {
   components: {
@@ -88,6 +90,9 @@ export default {
     DeleteDialog,
   },
   data: () => ({
+    ADMIN: ADMIN,
+    VIEWER: VIEWER,
+    EDITOR: EDITOR,
     search: "",
     dialogs: {
       delete: false,
@@ -115,8 +120,11 @@ export default {
     ],
   }),
 
-  computed: {
-    ...mapState("rooms", ["rooms"]),
+  computed: {    
+    ...mapGetters({
+      user: "user/getUser",
+      rooms: "rooms/getRooms"
+    }),    
     deleteName() {
       if (this.activeRoom) {
         return this.activeRoom.name;

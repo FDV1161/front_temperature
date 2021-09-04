@@ -6,7 +6,8 @@ import functionsModule from './modules/functions';
 import currentReadingsModule from './modules/current_readings';
 import journalReadingsModule from './modules/journal_readings';
 import deviceFunctionsModule from './modules/device_functions';
-import homeModule from './modules/home'
+import homeModule from './modules/home';
+import userModule from './modules/user';
 
 export default {
     rooms: roomsModule(instance),
@@ -17,4 +18,5 @@ export default {
     journalReadings: journalReadingsModule(instance),
     deviceFunctions: deviceFunctionsModule(instance),
     home: homeModule(instance),
+    user: userModule(instance),    
 }

@@ -15,70 +15,100 @@ import Devices from '@/page/Devices/Display.vue'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes: [        
+    routes: [
         {
             path: '/',
             name: 'home',
-            component: HomePage
+            component: HomePage,
+            meta: { authCheck: true },
         },
-        {            
+        {
+            path: '/login',
+            name: 'login',
+            component: () => import('@/page/Login')
+        },
+        {
             path: '/rooms',
             name: 'rooms',
-            component: RoomsPage
+            component: RoomsPage,
+            meta: { authCheck: true },
         },
-        {            
+        {
             path: '/rooms/:id',
             name: 'room-details',
-            component: RoomDetailsPage
+            component: RoomDetailsPage,
+            meta: { authCheck: true },
         },
-        {            
+        {
             path: '/edit-room/:id',
             name: 'edit-room',
-            component: EditRoom
+            component: EditRoom,
+            meta: { authCheck: true },
         },
-        {            
+        {
             path: '/create-room',
             name: 'create-room',
-            component: CreateRoom
+            component: CreateRoom,
+            meta: { authCheck: true },
         },
         {
             path: '/functions',
             name: 'functions',
-            component: FunctionsPage
+            component: FunctionsPage,
+            meta: { authCheck: true },
         },
         {
             path: '/functions/create',
             name: 'functions-create',
-            component: FunctionsCreatePage
+            component: FunctionsCreatePage,
+            meta: { authCheck: true },
         },
         {
             path: '/functions/edit/:id',
             name: 'function-edit',
-            component: FunctionsEditPage
-        },        
-        {            
+            component: FunctionsEditPage,
+            meta: { authCheck: true },
+        },
+        {
             path: '/user-groups',
             name: 'user-groups',
-            component: UserGroups
+            component: UserGroups,
+            meta: { authCheck: true },
         },
-        {            
+        {
             path: '/users',
             name: 'users',
-            component: Users
-        },        
-        {            
+            component: Users,
+            meta: { authCheck: true },
+        },
+        {
             path: '/devices/:id',
             name: 'devices',
-            component: Devices
-        },        
+            component: Devices,
+            meta: { authCheck: true },
+        },
         {
             path: '*',
             name: 'not-found',
-            component: HomePage
+            component: HomePage,
+            component: () => import('@/page/NotFound')
         },
     ]
 
 })
+
+router.beforeEach((to, from, next) => {
+    const userIsAuth = !!localStorage.getItem("user");
+    const requireAuth = to.matched.some(record => record.meta.authCheck);
+    if (requireAuth && !userIsAuth) {
+        next({ name: "login" });
+    }else{
+        next();
+    }    
+})
+
+
+export default router;

@@ -1,7 +1,11 @@
 <template>
   <v-app-bar app dense clipped-left color="secondary">
     <v-toolbar dense flat color="secondary">
-      <v-app-bar-nav-icon v-if="isAuth" tile @click.stop="drawer.side_bar = !drawer.side_bar">
+      <v-app-bar-nav-icon
+        v-if="isAuth"
+        tile
+        @click.stop="drawer.side_bar = !drawer.side_bar"
+      >
       </v-app-bar-nav-icon>
       <v-toolbar-title class="text-uppercase">
         <span>Цифровая лаборатория</span>
@@ -23,18 +27,18 @@
               <v-list-item-icon>
                 <v-icon> mdi-account-circle-outline </v-icon>
               </v-list-item-icon>
-              <v-list-item-title> 
-                {{user.login}}
+              <v-list-item-title>
+                {{ user.login }}
               </v-list-item-title>
             </v-list-item>
             <v-divider></v-divider>
             <v-list-item-group>
-              <v-list-item>
+              <!-- <v-list-item>
                 <v-list-item-title>Личный кабинет</v-list-item-title>
                 <v-list-item-icon>
                   <v-icon> mdi-card-account-details-outline </v-icon>
                 </v-list-item-icon>
-              </v-list-item>
+              </v-list-item> -->
               <v-list-item @click="logout">
                 <v-list-item-title> Выйти </v-list-item-title>
                 <v-list-item-icon>
@@ -59,20 +63,16 @@ export default {
   computed: {
     ...mapGetters({
       user: "user/getUser",
+      isAuth: "user/isAuth",
     }),
-    isAuth(){
-      return !!this.user;
-    }
   },
-  
+
   methods: {
     ...mapActions({
-      removeUser: "user/removeUser",
+      signOut: "user/signOut",
     }),
     logout() {
-      localStorage.removeItem("user");
-      this.removeUser();
-      this.$router.push({ name: "login" });
+      this.signOut();
     },
   },
 };

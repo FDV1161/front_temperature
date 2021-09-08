@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar :drawer="drawer" />    
+    <app-bar :drawer="drawer" />
     <side-bar v-if="isAuth" :drawer="drawer" />
     <v-main app>
       <notification-list />
@@ -11,7 +11,7 @@
 
 
 <script>
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import AppBar from "@/components/Navigations/AppBar.vue";
 import SideBar from "@/components/Navigations/SideBar.vue";
 import NotificationList from "@/components/Notification/NotificationList";
@@ -25,14 +25,16 @@ export default {
     NotificationList,
   },
 
-  created() {
-    this.$store.dispatch(
-      "user/setUser",
-      JSON.parse(localStorage.getItem("user"))
-    );
+  mounted() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      this.signIn(token);
+    } else {
+      this.signOut();
+    }
   },
 
-  data: () => ({  
+  data: () => ({
     drawer: {
       side_bar: window.innerWidth > 1264, // in order to not show after a reboots
       nav_bar: false,
@@ -42,11 +44,15 @@ export default {
   computed: {
     ...mapGetters({
       user: "user/getUser",
+      isAuth: "user/isAuth",     
     }),
-    isAuth(){
-      return !!this.user;
-    }
-  }
+  },
+  methods: {
+    ...mapActions({
+      signIn: "user/signIn",
+      signOut: "user/signOut",
+    }),
+  },
 };
 </script>
 

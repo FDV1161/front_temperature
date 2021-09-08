@@ -6,12 +6,12 @@ import RoomsPage from '@/page/Rooms/List.vue'
 import FunctionsPage from '@/page/Functions/List.vue'
 import FunctionsCreatePage from '@/page/Functions/Create.vue'
 import FunctionsEditPage from '@/page/Functions/Edit.vue'
-import UserGroups from '@/page/UserGroups.vue'
-import Users from '@/page/Users.vue'
+import UsersList from '@/page/Users/UsersList.vue'
 import RoomDetailsPage from '@/page/Rooms/Display.vue'
 import EditRoom from '@/page/Rooms/Edit.vue'
 import CreateRoom from '@/page/Rooms/Create.vue'
 import Devices from '@/page/Devices/Display.vue'
+import store from '@/store/index'
 
 Vue.use(Router)
 
@@ -71,17 +71,17 @@ const router = new Router({
             name: 'function-edit',
             component: FunctionsEditPage,
             meta: { authCheck: true },
-        },
-        {
-            path: '/user-groups',
-            name: 'user-groups',
-            component: UserGroups,
-            meta: { authCheck: true },
-        },
+        },        
         {
             path: '/users',
             name: 'users',
-            component: Users,
+            component: UsersList,
+            meta: { authCheck: true },
+        },
+        {
+            path: '/users/:id',
+            name: 'usersEdit',
+            component: () => import('@/page/Users/UsersEdit'),
             meta: { authCheck: true },
         },
         {
@@ -101,7 +101,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    const userIsAuth = !!localStorage.getItem("user");
+    const {"user/isAuth": userIsAuth} = store.getters;    
     const requireAuth = to.matched.some(record => record.meta.authCheck);
     if (requireAuth && !userIsAuth) {
         next({ name: "login" });

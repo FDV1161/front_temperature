@@ -10,27 +10,27 @@
       </v-col>
     </v-row>
 
-    <input-field v-model="device.name" label="Название" readonly/>
-    <input-field v-model="device.description" label="Описание" readonly/>
-
+    <input-field v-model="device.name" label="Название" readonly />
+    <input-field v-model="device.description" label="Описание" readonly />
 
     <v-data-table
-        :headers="headers"
-        :items="journalReadings"
-        :options.sync="options"
-        :server-items-length="rowCount"
-        :loading="loading"
-        :items-per-page="10"
-        :footer-props="{'items-per-page-options': [10, 20, 50, 100]}"
-        class="elevation-1"
+      :headers="headers"
+      :items="journalReadings"
+      :options.sync="options"
+      :server-items-length="rowCount"
+      :loading="loading"
+      :items-per-page="10"
+      :footer-props="{ 'items-per-page-options': [10, 20, 50, 100] }"
+      class="elevation-1"
     >
       <template v-slot:top>
-        <v-toolbar flat>
-          <v-toolbar-title class="subtitle-1 font-weight-regular">
+        <v-toolbar flat d-flex align-center>
+          <v-toolbar-title class="subtitle-1 font-weight-regular mb-3">
             История показаний
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-select
+          <div>
+            <v-select
               :items="device.deviceFunctions"
               menu-props="auto"
               label="Функции"
@@ -39,7 +39,12 @@
               v-on:change="selectDeviceFunction"
               :value="selectedDeviceFunction"
               clearable
-          ></v-select>
+            ></v-select>
+          </div>
+          <v-btn class="mb-3" text tile @click="downloadFile">
+            Экспорт
+            <v-icon right> mdi-cloud-upload </v-icon>
+          </v-btn>
         </v-toolbar>
       </template>
 
@@ -75,8 +80,8 @@ export default {
       rowCount: 0,
       loading: false,
       headers: [
-        {text: "Дата", value: "updatedAt"},
-        {text: "Показания", value: "value"},
+        { text: "Дата", value: "updatedAt" },
+        { text: "Показания", value: "value" },
       ],
     };
   },
@@ -91,9 +96,9 @@ export default {
   },
 
   created() {
-    this.$api.devices.get(this.$route.params.id).then(response => {
+    this.$api.devices.get(this.$route.params.id).then((response) => {
       this.device = response.data;
-      if(this.device.deviceFunctions){
+      if (this.device.deviceFunctions) {
         this.selectDeviceFunction(this.device.deviceFunctions[0].id);
       }
     });
@@ -104,7 +109,7 @@ export default {
   methods: {
     selectDeviceFunction(selectedDeviceFunction) {
       this.selectedDeviceFunction = selectedDeviceFunction;
-      this.loadDeviceFunctionValues()
+      this.loadDeviceFunctionValues();
     },
 
     loadDeviceFunctionValues() {
@@ -112,20 +117,40 @@ export default {
         return;
       }
       this.loading = true;
-      const {sortBy, sortDesc, page, itemsPerPage} = this.options;
-      this.$api.journalReadings.getAll({
-        deviceFuncId: this.selectedDeviceFunction,
-        paginatePage: page,
-        paginationCount: itemsPerPage,
-      }).then(response => {
-        this.journalReadings = response.data.values;
-        this.rowCount = response.data.rowCount;
-        this.loading = false;
-      });
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+      this.$api.journalReadings
+        .getAll({
+          deviceFuncId: this.selectedDeviceFunction,
+          paginatePage: page,
+          paginationCount: itemsPerPage,
+        })
+        .then((response) => {
+          this.journalReadings = response.data.values;
+          this.rowCount = response.data.rowCount;
+          this.loading = false;
+        });
     },
 
     dateFormat(date) {
       return moment(date).format("MM.DD.YYYY hh:mm");
+    },
+
+    downloadFile() {
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+      this.$api.journalReadings
+        .exportCSV({
+          deviceFuncId: this.selectedDeviceFunction,
+          paginatePage: page,
+          paginationCount: itemsPerPage,
+        })
+        .then((response) => {
+          const blob = new Blob([response.data]);
+          const link = document.createElement("a");
+          link.href = URL.createObjectURL(blob);
+          link.download = 'export.csv';
+          link.click();
+          URL.revokeObjectURL(link.href);
+        });
     },
   },
 };

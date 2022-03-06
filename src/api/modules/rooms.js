@@ -1,7 +1,7 @@
 export default function (instance) {
     return {
-        getRooms() {
-            return instance.get('room')
+        getRooms(payload) {
+            return instance.get('room', payload)
         },
         getRoom(payload) {
             return instance.get('room/' + payload)

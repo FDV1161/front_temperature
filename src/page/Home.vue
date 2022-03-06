@@ -1,47 +1,47 @@
 <template>
   <div class="home">
-    <v-container fluid>
-      <v-row>
-        <v-col cols="12" sm="6" md="3" v-for="room in rooms" :key="room.id">
-          <Card :room="room"/>
-        </v-col>
-      </v-row>
-    </v-container>
+    <ProgressLoading v-if="roomsLoading | functionLoading" />
+    <RoomPreviewCard v-else :room="room" v-for="room in rooms" :key="room.id" />
   </div>
 </template>
 
 <script>
-import Card from "../components/Home/Card";
+import { mapActions } from "vuex";
+import { dictFromArray } from "@/utils/index";
+
+import RoomPreviewCard from "../components/Home/RoomPreviewCard";
+import ProgressLoading from "../components/Base/ProgressLoading.vue";
 
 export default {
-  data(){
+  data() {
     return {
-      // rooms: {
-      //   id: null,
-      //   name: null,
-      //   currentValues: [
-      //     {
-      //       id: null,
-      //       minValue: null,
-      //       maxValue: null,
-      //       icon: null,
-      //       measureSymbol: null,
-      //       writeEnable: null,
-      //       cur_val: null
-      //     }
-      //   ]
-      // },
+      roomsLoading: true,
+      functionLoading: true,
       rooms: null,
-    }
+    };
   },
+
   components: {
-    Card,
+    RoomPreviewCard,
+    ProgressLoading,
   },
+
   created() {
-    this.$api.home.getCurrentReadings()
-        .then(response => {
-          this.rooms = response.data;
-        })
+    this.$api.rooms.getRooms({ on_home: true }).then((response) => {
+      this.rooms = response.data;
+      this.roomsLoading = false;
+    });
+
+    this.$api.functions.getAll().then((response) => {
+      this.functionLoading = false;
+      this.setFunctions(dictFromArray(response.data, "id"));
+    });
+  },
+
+  methods: {
+    ...mapActions({
+      setFunctions: "functions/loadFunctions",
+    }),
   },
 };
 </script>

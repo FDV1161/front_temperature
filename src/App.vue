@@ -9,7 +9,6 @@
   </v-app>
 </template>
 
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 import AppBar from "@/components/Navigations/AppBar.vue";
@@ -44,18 +43,19 @@ export default {
   computed: {
     ...mapGetters({
       user: "user/getUser",
-      isAuth: "user/isAuth",     
+      isAuth: "user/isAuth",
+      values: "soketio/values",
     }),
   },
+
   methods: {
     ...mapActions({
       signIn: "user/signIn",
       signOut: "user/signOut",
+      setFunctions: "functions/loadFunctions",
     }),
   },
 };
 </script>
 
-
-<style>
-</style>
+<style></style>

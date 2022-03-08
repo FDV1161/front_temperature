@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col class="pb-0">
+      <v-col>
         <div class="name">
           <v-btn tile text class="text-capitalize" @click="redirectToDetail">
             {{ room.name }}

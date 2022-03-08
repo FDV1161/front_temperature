@@ -3,13 +3,18 @@
     indeterminate
     color="primary"
     height="5"
+    v-if="getLoading"
   ></v-progress-linear>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: {
-    loading: Boolean,
+  computed: {
+    ...mapGetters({
+      getLoading: "loader/getLoading",
+    }),
   },
 };
 </script>

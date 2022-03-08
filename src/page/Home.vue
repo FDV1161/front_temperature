@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-    <ProgressLoading v-if="roomsLoading | functionLoading" />
-    <RoomPreviewCard v-else :room="room" v-for="room in rooms" :key="room.id" />
+    <template v-if="!loading">
+      <RoomPreviewCard :room="room" v-for="room in rooms" :key="room.id" />
+    </template>
   </div>
 </template>
 
@@ -9,8 +10,8 @@
 import { mapActions } from "vuex";
 import { dictFromArray } from "@/utils/index";
 
-import RoomPreviewCard from "../components/Home/RoomPreviewCard";
-import ProgressLoading from "../components/Base/ProgressLoading.vue";
+import RoomPreviewCard from "../components/Home/RoomPreviewCard.vue";
+import Breadcrumbs from "../components/Base/Breadcrumbs.vue";
 
 export default {
   data() {
@@ -21,12 +22,21 @@ export default {
     };
   },
 
+  computed: {
+    loading() {
+      var loadingValue = this.roomsLoading | this.functionLoading;
+      this.setLoading(loadingValue);
+      return loadingValue;
+    },
+  },
+
   components: {
     RoomPreviewCard,
-    ProgressLoading,
+    Breadcrumbs,
   },
 
   created() {
+    this.setLoading(true);
     this.$api.rooms.getRooms({ on_home: true }).then((response) => {
       this.rooms = response.data;
       this.roomsLoading = false;
@@ -41,6 +51,7 @@ export default {
   methods: {
     ...mapActions({
       setFunctions: "functions/loadFunctions",
+      setLoading: "loader/setLoading",
     }),
   },
 };

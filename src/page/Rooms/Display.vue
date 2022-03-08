@@ -1,35 +1,30 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col class="px-0">
-        <v-toolbar flat>
-          <v-toolbar-title>Просмотр аудитории</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn class="mr-2" text tile @click="$router.go(-1)">Назад</v-btn>
-        </v-toolbar>
-      </v-col>
-    </v-row>
+  <v-container fluid class="room-detail">
+    
+    <Title :name="room.name" />
+    <Breadcrumbs :items="breadcrumbsItems" />
 
-    <input-field v-model="room.name" label="Название" readonly/>
-    <input-field v-model="room.description" label="Описание" readonly/>
-    <current-device-values :devices="room.devices" class="px-0"/>
-    <runner-block :room="room"/>
-
+    <input-field v-model="room.description" label="Описание" readonly />
+    <current-device-values :devices="room.devices" class="px-0" />
+    <runner-block :room="room" />
   </v-container>
 </template>
 
 <script>
-
 import CurrentDeviceValues from "../../components/Devices/CurrentValues";
 import RunnerBlock from "../../components/Devices/RunnerBlock";
 import InputField from "../../components/Base/Fields/InputField";
-import {mapActions} from "vuex";
+import Title from "../../components/Base/Title.vue";
+import Breadcrumbs from "@/components/Base/Breadcrumbs.vue";
+import { mapActions } from "vuex";
 
 export default {
   components: {
     CurrentDeviceValues,
     InputField,
-    RunnerBlock
+    RunnerBlock,
+    Breadcrumbs,
+    Title,
   },
 
   data() {
@@ -38,22 +33,41 @@ export default {
         id: null,
         name: "",
         description: "",
-        devices: []
+        devices: [],
       },
     };
   },
 
+  computed: {
+    breadcrumbsItems() {
+      return [
+        {
+          text: "Главная",
+          disabled: false,
+          to: { name: "home" },
+          exact: true,
+        },
+        {
+          text: this.room.name,
+          disabled: false,
+        },
+      ];
+    },
+  },
+
   created() {
-    this.$api.rooms.getRoom(this.$route.params.id).then(response => {
+    this.setLoading(true);
+    this.$api.rooms.getRoom(this.$route.params.id).then((response) => {
+      this.setLoading(false);
       this.room = response.data;
     });
   },
 
   methods: {
     ...mapActions({
-      loadCurrentReadings: 'currentReadings/loadCurrentReadings',
+      loadCurrentReadings: "currentReadings/loadCurrentReadings",
+      setLoading: "loader/setLoading",
     }),
-
   },
 };
 </script>

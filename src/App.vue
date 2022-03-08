@@ -2,8 +2,9 @@
   <v-app>
     <app-bar :drawer="drawer" />
     <side-bar v-if="isAuth" :drawer="drawer" />
-    <v-main app>
+    <v-main app>      
       <notification-list />
+      <ProgressLoading />
       <router-view />
     </v-main>
   </v-app>
@@ -14,6 +15,7 @@ import { mapActions, mapGetters } from "vuex";
 import AppBar from "@/components/Navigations/AppBar.vue";
 import SideBar from "@/components/Navigations/SideBar.vue";
 import NotificationList from "@/components/Notification/NotificationList";
+import ProgressLoading from "@/components/Base/ProgressLoading.vue";
 
 export default {
   name: "App",
@@ -22,6 +24,7 @@ export default {
     AppBar,
     SideBar,
     NotificationList,
+    ProgressLoading,
   },
 
   mounted() {

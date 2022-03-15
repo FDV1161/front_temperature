@@ -3,8 +3,8 @@
     <v-row>
       <v-col>
         <div class="name">
-          <v-btn tile text class="text-capitalize" @click="redirectToDetail">
-            {{ room.name }}
+          <v-btn tile text class="text-capitalize" @click="onTitleClick">
+            {{ title }}
           </v-btn>
         </div>
       </v-col>
@@ -29,10 +29,10 @@
 
 <script>
 import { mapGetters } from "vuex";
-import DeviceValueCard from "./DeviceValueCard.vue";
+import DeviceValueCard from "@/components/Home/DeviceValueCard.vue";
 
 export default {
-  props: ["room"],
+  props: ["item", "title", "deviceFunctions"],
 
   components: {
     DeviceValueCard,
@@ -40,19 +40,8 @@ export default {
 
   computed: {
     ...mapGetters({
-      soketValues: "soketio/getCurValues",
       soketValue: "soketio/getCurValue",
     }),
-
-    deviceFunctions() {
-      var deviceFiunctions = [];
-      this.room.devices.forEach((device) => {
-        device.deviceFunctions.forEach((deviceFiunction) => {
-          deviceFiunctions.push(deviceFiunction);
-        });
-      });
-      return deviceFiunctions;
-    },
   },
 
   methods: {
@@ -79,6 +68,9 @@ export default {
         return func.name;
       }
       return "";
+    },
+    onTitleClick() {
+      this.$emit("onTitleClick", this.item);
     },
     redirectToDetail() {
       return this.$router.push({

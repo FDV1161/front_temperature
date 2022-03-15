@@ -1,30 +1,39 @@
 <template>
   <v-container fluid class="room-detail">
-    
     <Title :name="room.name" />
     <Breadcrumbs :items="breadcrumbsItems" />
 
     <input-field v-model="room.description" label="Описание" readonly />
-    <current-device-values :devices="room.devices" class="px-0" />
-    <runner-block :room="room" />
+
+    <DevicePreviewCard
+      class="px-0"
+      :item="device"
+      :title="device.name"
+      :deviceFunctions="device.deviceFunctions"
+      @onTitleClick="redirectToDeviceDetail"
+      v-for="device in room.devices"
+      :key="device.id"
+    />
+
+    <RunnerBlock :room="room" />
   </v-container>
 </template>
 
 <script>
-import CurrentDeviceValues from "../../components/Devices/CurrentValues";
-import RunnerBlock from "../../components/Devices/RunnerBlock";
+import RunnerBlock from "@/components/Devices/RunnerBlock.vue";
 import InputField from "../../components/Base/Fields/InputField";
 import Title from "../../components/Base/Title.vue";
 import Breadcrumbs from "@/components/Base/Breadcrumbs.vue";
+import DevicePreviewCard from "@/components/Devices/DevicePreviewCard.vue";
 import { mapActions } from "vuex";
 
 export default {
   components: {
-    CurrentDeviceValues,
     InputField,
     RunnerBlock,
     Breadcrumbs,
     Title,
+    DevicePreviewCard,
   },
 
   data() {
@@ -68,6 +77,9 @@ export default {
       loadCurrentReadings: "currentReadings/loadCurrentReadings",
       setLoading: "loader/setLoading",
     }),
+    redirectToDeviceDetail(item) {
+      this.$router.push({ name: "devices", params: { id: item.id } });
+    },
   },
 };
 </script>

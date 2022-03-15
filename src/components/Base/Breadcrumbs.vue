@@ -1,7 +1,7 @@
 <template>
   <v-row class="relative">
-    <v-col>
-      <v-breadcrumbs class="ml-2" :items="items" divider=">"></v-breadcrumbs>
+    <v-col class="indent">
+      <v-breadcrumbs :items="items" divider=">"></v-breadcrumbs>
     </v-col>
   </v-row>
 </template>
@@ -14,8 +14,11 @@ export default {
 </script>
 
 <style scoped>
+.indent {
+  margin-top: -12px;
+}
 .relative {
-  position: relative;
+  position: relative;  
 }
 .v-breadcrumbs {
   padding: 0px;

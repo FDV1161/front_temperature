@@ -1,12 +1,7 @@
 <template>
-  <v-container fluid v-show="writeableDevices.length > 0">
-    <v-row>
-      <v-col class="d-flex align-center field-header">
-        <span>Запуск функций</span>
-      </v-col>
-    </v-row>
+  <v-container class="px-0" fluid v-show="writeableDevices.length > 0">    
     <div v-for="device in writeableDevices" :key="device.id">
-      <v-subheader class="subtitle-1 font-weight-black">{{ device.name }}</v-subheader>
+      <v-subheader class="subtitle-1 pl-0 font-weight-black">{{ device.name }}</v-subheader>
       <runner-field v-for="df in device.deviceFunctions" :key="df.id" :deviceFunction="df" v-if="df.writeEnable" class="mx-2"/>
     </div>
   </v-container>

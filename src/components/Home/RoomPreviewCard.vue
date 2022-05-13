@@ -18,16 +18,19 @@
             :functionName="deviceFiunction.func.name"
             :updateTime="getUpdateTime(deviceFiunction)"
             :isSwitch="isSwitchFunction(deviceFiunction.func)"
+            @click="openDeviceFiunctionDetail(deviceFiunction)"
             v-for="deviceFiunction in deviceFunctions"
             :key="deviceFiunction.id"
           />
         </div>
       </v-col>
     </v-row>
+    <DeviceFunctionDetail :dialog="dialog" :deviceFunction="selectDeviceFunction" @close="closeDialog" />
   </v-container>
 </template>
 
 <script>
+import DeviceFunctionDetail from "@/page/DeviceFunctionDetail.vue";
 import { mapGetters } from "vuex";
 import DeviceValueCard from "./DeviceValueCard.vue";
 
@@ -36,7 +39,13 @@ export default {
 
   components: {
     DeviceValueCard,
+    DeviceFunctionDetail,
   },
+
+  data: () => ({
+    dialog: false,
+    selectDeviceFunction: null,
+  }),
 
   computed: {
     ...mapGetters({
@@ -56,6 +65,10 @@ export default {
   },
 
   methods: {
+    openDeviceFiunctionDetail(deviceFunction) {
+      this.selectDeviceFunction = deviceFunction;   
+      this.dialog = true;
+    },
     getDeviceValue(deviceFiunction) {
       const sdf = this.soketValue(deviceFiunction.id);
       if (sdf && sdf.cur_val) {
@@ -86,6 +99,9 @@ export default {
         params: { id: this.room.id },
       });
     },
+    closeDialog(){
+      this.dialog = false;
+    }
   },
 };
 </script>

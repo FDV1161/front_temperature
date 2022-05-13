@@ -1,5 +1,5 @@
 <template>
-  <div class="deviceValueCard">
+  <v-card class="deviceValueCard" @click="$emit('click')">
     <div class="header">
       <span class="updateTime">{{ updateTimeString }}</span>
     </div>
@@ -20,7 +20,7 @@
     <div class="footer">
       <span class="functionName">{{ functionName }}</span>
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -47,7 +47,7 @@ export default {
     updateTimeString() {
       return moment(this.updateTime).format("DD.MM.YYYY hh:mm");
     },
-  },
+  },  
 };
 </script>
 
@@ -60,10 +60,10 @@ export default {
   margin: 5px 10px 5px 5px;
   width: 100px;
   box-sizing: content-box;
-  border-radius: 10px;
+  border-radius: 10px!important;
   background: #fdfeff;
   padding: 10px 10px 10px 10px;
-  box-shadow: 0 8px 20px 6px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 8px 20px 6px rgba(0, 0, 0, 0.125)!important;
 }
 .content {
   font-size: 18px;

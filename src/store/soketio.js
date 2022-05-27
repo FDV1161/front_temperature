@@ -1,3 +1,4 @@
+import Vue from "vue";
 import { dictFromArray } from "@/utils/index";
 
 export default {
@@ -19,8 +20,8 @@ export default {
     SOCKET_DISCONNECT(state, payload) {
       state.isConnect = false;
     },
-    SOCKET_MESSAGE(state, payload) {      
-      state.data[payload.id] = payload
+    SOCKET_MESSAGE(state, payload) {
+      Vue.set(state.data, payload.id, payload);
     },
   },
   actions: {

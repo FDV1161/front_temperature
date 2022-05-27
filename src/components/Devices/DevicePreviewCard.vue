@@ -63,8 +63,7 @@ export default {
       return func.minValue == 0 && func.maxValue === 1;
     },
     functionName(func) {
-      if (func) {
-        console.log(func.name);
+      if (func) {        
         return func.name;
       }
       return "";

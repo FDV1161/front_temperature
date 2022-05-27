@@ -31,7 +31,7 @@ export default {
     deviceValue: Number,
     measureSymbol: String,
     functionName: String,
-    updateTime: Date,
+    updateTime: String,
     isSwitch: {
       type: Boolean,
       default: false,
@@ -45,9 +45,11 @@ export default {
       return this.deviceValue ? "green darken-2" : "red darken-2";
     },
     updateTimeString() {
-      return moment(this.updateTime).format("DD.MM.YYYY hh:mm");
+      return this.updateTime
+        ? moment(this.updateTime).format("DD.MM.YYYY hh:mm")
+        : "";
     },
-  },  
+  },
 };
 </script>
 
@@ -60,10 +62,10 @@ export default {
   margin: 5px 10px 5px 5px;
   width: 100px;
   box-sizing: content-box;
-  border-radius: 10px!important;
+  border-radius: 10px !important;
   background: #fdfeff;
   padding: 10px 10px 10px 10px;
-  box-shadow: 0 8px 20px 6px rgba(0, 0, 0, 0.125)!important;
+  box-shadow: 0 8px 20px 6px rgba(0, 0, 0, 0.125) !important;
 }
 .content {
   font-size: 18px;

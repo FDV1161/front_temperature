@@ -1,33 +1,39 @@
-import { Line } from "vue-chartjs";
+import { Line, mixins } from "vue-chartjs";
+const { reactiveProp } = mixins;
 
 export default {
   extends: Line,
-  props: ["data"],
-  data: () => ({
-    options: {
+  mixins: [reactiveProp],
+  props: ["chartData"],
+  mounted() {
+    this.renderChart(this.chartData, {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: false,
+      },
+      maintainAspectRatio: false,
+      repsonsive: true,
       scales: {
         xAxes: [
           {
             type: "time",
-            // bounds: "ticks",
-            // distribution: "series",
-            time: {              
-              min: "2022-03-31T00:00:00",
-              max: "2022-03-31T24:00:00",
-              unit: "minute",
-              stepSize: 60,
-              minUnit: "minute",
+            time: {
+              unit: "second",
               displayFormats: {
-                minute: 'HH:mm'
-              }
-              
+                minute: "HH:mm",
+                second: "HH:mm:ss",
+              },
+              tooltipFormat: "MM.DD.YYYY hh:mm:ss",
+            },
+            display: true,
+            scaleLabel: {
+              display: true,
             },
           },
         ],
       },
-    },
-  }),
-  mounted() {
-    this.renderChart(this.data, this.options);
+    });
   },
 };

@@ -13,19 +13,24 @@
       <v-col class="indent">
         <div class="devices">
           <DeviceValueCard
-            :deviceValue="getDeviceValue(deviceFiunction)"
-            :measureSymbol="deviceFiunction.func.measureSymbol"
-            :functionName="deviceFiunction.func.name"
-            :updateTime="getUpdateTime(deviceFiunction)"
-            :isSwitch="isSwitchFunction(deviceFiunction.func)"
-            @click="openDeviceFiunctionDetail(deviceFiunction)"
-            v-for="deviceFiunction in deviceFunctions"
-            :key="deviceFiunction.id"
+            :deviceValue="getDeviceValue(deviceFunction)"
+            :measureSymbol="deviceFunction.func.measureSymbol"
+            :functionName="deviceFunction.func.name"
+            :updateTime="getUpdateTime(deviceFunction)"
+            :isSwitch="isSwitchFunction(deviceFunction.func)"
+            @click="opendeviceFunctionDetail(deviceFunction)"
+            v-for="deviceFunction in deviceFunctions"
+            :key="deviceFunction.id"
           />
         </div>
       </v-col>
     </v-row>
-    <DeviceFunctionDetail :dialog="dialog" :deviceFunction="selectDeviceFunction" @close="closeDialog" />
+    <DeviceFunctionDetail
+      :dialog="dialog"
+      :deviceFunction="selectDeviceFunction"
+      @close="closeDialog"
+      v-if="dialog"
+    />
   </v-container>
 </template>
 
@@ -54,34 +59,34 @@ export default {
     }),
 
     deviceFunctions() {
-      var deviceFiunctions = [];
+      var deviceFunctions = [];
       this.room.devices.forEach((device) => {
-        device.deviceFunctions.forEach((deviceFiunction) => {
-          deviceFiunctions.push(deviceFiunction);
+        device.deviceFunctions.forEach((deviceFunction) => {
+          deviceFunctions.push(deviceFunction);
         });
       });
-      return deviceFiunctions;
+      return deviceFunctions;
     },
   },
 
   methods: {
-    openDeviceFiunctionDetail(deviceFunction) {
-      this.selectDeviceFunction = deviceFunction;   
+    opendeviceFunctionDetail(deviceFunction) {
+      this.selectDeviceFunction = deviceFunction;
       this.dialog = true;
     },
-    getDeviceValue(deviceFiunction) {
-      const sdf = this.soketValue(deviceFiunction.id);
+    getDeviceValue(deviceFunction) {
+      const sdf = this.soketValue(deviceFunction.id);
       if (sdf && sdf.cur_val) {
         return sdf.cur_val;
       }
-      return deviceFiunction.curVal;
+      return deviceFunction.curVal;
     },
-    getUpdateTime(deviceFiunction) {
-      const sdf = this.soketValue(deviceFiunction.id);
-      if (sdf && sdf.updated_at) {
-        return sdf.updated_at;
+    getUpdateTime(deviceFunction) {
+      const sdf = this.soketValue(deviceFunction.id);
+      if (sdf && sdf.updatedAt) {
+        return sdf.updatedAt;
       }
-      return deviceFiunction.updated_at;
+      return deviceFunction.updatedAt;
     },
     isSwitchFunction(func) {
       return func.minValue == 0 && func.maxValue === 1;
@@ -99,9 +104,9 @@ export default {
         params: { id: this.room.id },
       });
     },
-    closeDialog(){
+    closeDialog() {
       this.dialog = false;
-    }
+    },
   },
 };
 </script>

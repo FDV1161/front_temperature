@@ -19,8 +19,8 @@ export default {
     SOCKET_DISCONNECT(state, payload) {
       state.isConnect = false;
     },
-    SOCKET_MESSAGE(state, payload) {
-      state.data = dictFromArray(payload, "id");
+    SOCKET_MESSAGE(state, payload) {      
+      state.data[payload.id] = payload
     },
   },
   actions: {

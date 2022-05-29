@@ -78,4 +78,7 @@ export default {
   height: 24px;
   margin-bottom: 8px;
 }
+.subheader::first-letter {
+  text-transform: capitalize;
+}
 </style>

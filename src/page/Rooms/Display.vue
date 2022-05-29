@@ -3,10 +3,15 @@
     <Title :name="room.name" />
     <Breadcrumbs :items="breadcrumbsItems" />
 
-    <input-field v-model="room.description" label="Описание" readonly />
+    <v-row class="my-5" v-if="room.description">
+      <v-col>
+        <div class="description">Описание</div>
+        <div class="px-1 py-2">{{ room.description }}</div>
+      </v-col>
+    </v-row>    
 
     <DevicePreviewCard
-      class="px-0"
+      class="px-0 py-0 my-5"
       :item="device"
       :title="device.name"
       :deviceFunctions="device.deviceFunctions"
@@ -15,7 +20,7 @@
       :key="device.id"
     />
 
-    <RunnerBlock :room="room" />
+    <RunnerBlock class="my-5" :room="room" />
   </v-container>
 </template>
 
@@ -85,8 +90,14 @@ export default {
 </script>
 
 <style scoped>
+.row-indent {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+.description {
+  font-weight: 500;
+}
 .field-header {
   height: 90px;
 }
 </style>
-

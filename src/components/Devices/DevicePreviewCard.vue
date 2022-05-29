@@ -13,22 +13,30 @@
       <v-col class="indent">
         <div class="devices">
           <DeviceValueCard
-            :deviceValue="getDeviceValue(deviceFiunction)"
-            :measureSymbol="deviceFiunction.func.measureSymbol"
-            :functionName="deviceFiunction.func.name"
-            :updateTime="getUpdateTime(deviceFiunction)"
-            :isSwitch="isSwitchFunction(deviceFiunction.func)"
-            v-for="deviceFiunction in deviceFunctions"
-            :key="deviceFiunction.id"
+            :deviceValue="getDeviceValue(deviceFunction)"
+            :measureSymbol="deviceFunction.func.measureSymbol"
+            :functionName="deviceFunction.func.name"
+            :updateTime="getUpdateTime(deviceFunction)"
+            :isSwitch="isSwitchFunction(deviceFunction.func)"
+            @click="deviceFunctionDialogOpen(deviceFunction)"
+            v-for="deviceFunction in deviceFunctions"
+            :key="deviceFunction.id"
           />
         </div>
       </v-col>
     </v-row>
+    <DeviceFunctionDetail
+      :dialog="deviceFunctionDialog"
+      :deviceFunction="deviceFunctionSelected"
+      @close="deviceFunctionDialogClose"
+      v-if="deviceFunctionDialog"
+    />
   </v-container>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import DeviceFunctionDetail from "@/page/DeviceFunctionDetail.vue";
 import DeviceValueCard from "@/components/Home/DeviceValueCard.vue";
 
 export default {
@@ -36,6 +44,7 @@ export default {
 
   components: {
     DeviceValueCard,
+    DeviceFunctionDetail,
   },
 
   computed: {
@@ -44,26 +53,31 @@ export default {
     }),
   },
 
+  data: () => ({
+    deviceFunctionDialog: false,
+    deviceFunctionSelected: null,
+  }),
+
   methods: {
-    getDeviceValue(deviceFiunction) {
-      const sdf = this.soketValue(deviceFiunction.id);
+    getDeviceValue(deviceFunction) {
+      const sdf = this.soketValue(deviceFunction.id);
       if (sdf && sdf.cur_val) {
         return sdf.cur_val;
       }
-      return deviceFiunction.curVal;
+      return deviceFunction.curVal;
     },
-    getUpdateTime(deviceFiunction) {
-      const sdf = this.soketValue(deviceFiunction.id);
+    getUpdateTime(deviceFunction) {
+      const sdf = this.soketValue(deviceFunction.id);
       if (sdf && sdf.updated_at) {
         return sdf.updated_at;
       }
-      return deviceFiunction.updated_at;
+      return deviceFunction.updatedAt;
     },
     isSwitchFunction(func) {
       return func.minValue == 0 && func.maxValue === 1;
     },
     functionName(func) {
-      if (func) {        
+      if (func) {
         return func.name;
       }
       return "";
@@ -76,6 +90,13 @@ export default {
         name: "room-details",
         params: { id: this.room.id },
       });
+    },
+    deviceFunctionDialogClose() {
+      this.deviceFunctionDialog = false;
+    },
+    deviceFunctionDialogOpen(deviceFunction) {
+      this.deviceFunctionSelected = deviceFunction;
+      this.deviceFunctionDialog = true;
     },
   },
 };

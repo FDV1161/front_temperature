@@ -15,14 +15,26 @@
         <v-toolbar-title> {{ title }} </v-toolbar-title>
         <v-spacer></v-spacer>
       </v-toolbar>
-      <v-card-text v-if="deviceFunction">
+      <v-card-text v-if="deviceFunction" class="px-0 px-sm-6">
         <v-container>
           <v-row>
-            <v-col cols="6" class="d-flex justify-start align-center">
+            <v-col
+              order="2"
+              order-sm="1"
+              cols="12"
+              sm="8"
+              class="d-flex justify-start align-center"
+            >
               <span class="mr-1">Обновлено:</span>
               <span>{{ updatedAt() }}</span>
             </v-col>
-            <v-col cols="6" class="d-flex justify-end">
+            <v-col
+              order="1"
+              order-sm="2"
+              cols="12"
+              sm="4"
+              class="d-flex justify-end"
+            >
               <v-btn
                 text
                 small
@@ -40,6 +52,14 @@
           <v-row v-if="chartData">
             <v-col>
               <LineChart style="height: 300px" :chartData="chartDataValues" />
+            </v-col>
+          </v-row>
+          <v-row class="mt-3" v-if="deviceFunction.writeEnable">
+            <v-col>
+              <span class="font-weight-bold">Управление</span>
+            </v-col>
+            <v-col cols="12">
+              <RunnerField :deviceFunction="deviceFunction" />
             </v-col>
           </v-row>
           <v-row class="my-3">
@@ -122,6 +142,7 @@
 import moment from "moment";
 import LineChart from "@/components/Home/Chart.js";
 import PaginageTable from "@/components/Base/PaginateTable.vue";
+import RunnerField from "@/components/Functions/RunnerField.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -133,6 +154,7 @@ export default {
   components: {
     LineChart,
     PaginageTable,
+    RunnerField,
   },
 
   data: () => ({

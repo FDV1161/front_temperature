@@ -2,7 +2,7 @@
   <v-app>
     <app-bar :drawer="drawer" />
     <side-bar v-if="isAuth" :drawer="drawer" />
-    <v-main app>      
+    <v-main app>
       <notification-list />
       <ProgressLoading />
       <router-view />
@@ -61,4 +61,16 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.description-content {
+  border-radius: 5px 5px 5px 5px;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 10px 10px 10px;
+}
+.custom-slider .v-messages {
+  display: none;
+}
+.custom-switch .v-messages {
+  display: none;
+}
+</style>

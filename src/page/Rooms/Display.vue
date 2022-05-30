@@ -8,7 +8,7 @@
         <div class="description">Описание</div>
         <div class="description-content">{{ room.description }}</div>
       </v-col>
-    </v-row>    
+    </v-row>
 
     <DevicePreviewCard
       class="px-0 py-0 my-5"
@@ -20,8 +20,6 @@
       v-for="device in room.devices"
       :key="device.id"
     />
-
-    <RunnerBlock class="my-5" :room="room" />
   </v-container>
 </template>
 

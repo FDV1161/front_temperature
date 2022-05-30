@@ -1,45 +1,44 @@
 <template>
-  <v-row>
-    <v-col v-if="!isSwitch">
+  <div>
+    <div v-if="!isSwitch">
       <v-slider
-          ticks
-          class="mx-4"
-          thumb-label="always"
-          :value="deviceFunction.curVal"
-          :label="deviceFunction.func.name"
-          :max="deviceFunction.func.maxValue"
-          :min="deviceFunction.func.minValue"
-          :readonly="loading"
-          :loading="loading"
-          @end="run"
+        ticks
+        thumb-label="always"
+        class="pt-5 custom-slider"
+        :value="deviceFunction.curVal"
+        :max="deviceFunction.func.maxValue"
+        :min="deviceFunction.func.minValue"
+        :readonly="loading"
+        :loading="loading"
+        @end="run"
       ></v-slider>
-    </v-col>
-    <v-col v-else class="d-flex justify-space-between align-center">
-      <v-subheader class="d-flex align-start">
-        <span class="subtitle-1 subheader">{{ deviceFunction.func.name }}</span>
-      </v-subheader>
+    </div>
+    <div v-else class="d-flex justify-space-between align-center">
+      <span class="subheader">выкл/вкл</span>
       <v-switch
-          class="mt-0 mx-4"
-          :value="deviceFunction.curVal"
-          :readonly="loading"
-          :loading="loading"
-          @change="run"
+        class="custom-switch mt-0"
+        :value="deviceFunction.curVal"
+        :readonly="loading"
+        :loading="loading"
+        @change="run"
       ></v-switch>
-    </v-col>
-  </v-row>
+    </div>
+  </div>
 </template>
 
-
 <script>
-import {console_print_error} from "../../utils";
-import {mapActions} from "vuex";
+import { console_print_error } from "../../utils";
+import { mapActions } from "vuex";
 
 export default {
   props: ["deviceFunction"],
 
   computed: {
     isSwitch() {
-      return this.deviceFunction.func.minValue === 0 && this.deviceFunction.func.maxValue === 1;
+      return (
+        this.deviceFunction.func.minValue === 0 &&
+        this.deviceFunction.func.maxValue === 1
+      );
     },
   },
   data() {
@@ -53,30 +52,31 @@ export default {
     }),
     run(value) {
       if (!this.loading) {
-        this.loading = true
-        this.$api.deviceFunctions.run({
-          id: this.deviceFunction.id,
-          value: value,
-        }).catch((error) => {
-          this.pushNotifications({
-            type: "error",
-            message: "Не запустить функцию",
+        this.loading = true;
+        this.$api.deviceFunctions
+          .run({
+            id: this.deviceFunction.id,
+            value: value,
+          })
+          .catch((error) => {
+            this.pushNotifications({
+              type: "error",
+              message: "Не запустить функцию",
+            });
+            console_print_error(error);
+          })
+          .finally(() => {
+            this.loading = false;
           });
-          console_print_error(error);
-        }).finally(() => {
-          this.loading = false;
-        })
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-
 <style scoped>
 .subheader {
-  height: 24px;
-  margin-bottom: 8px;
+  font-size: 14px;
 }
 .subheader::first-letter {
   text-transform: capitalize;

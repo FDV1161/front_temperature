@@ -44,7 +44,7 @@
         </div>
       </v-col>
     </v-row>
-    <DeviceFunctionDetail
+    <DeviceFunctionModal
       :dialog="deviceFunctionDialog"
       :deviceFunction="deviceFunctionSelected"
       @close="deviceFunctionDialogClose"
@@ -55,7 +55,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import DeviceFunctionDetail from "@/page/DeviceFunctionDetail.vue";
+import DeviceFunctionModal from "@/components/DeviceFunction/Modal.vue";
 import DeviceValueCard from "@/components/Home/DeviceValueCard.vue";
 
 export default {
@@ -63,7 +63,7 @@ export default {
 
   components: {
     DeviceValueCard,
-    DeviceFunctionDetail,
+    DeviceFunctionModal,
   },
 
   computed: {

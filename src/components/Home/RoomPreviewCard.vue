@@ -18,14 +18,14 @@
             :functionName="deviceFunction.func.name"
             :updateTime="getUpdateTime(deviceFunction)"
             :isSwitch="isSwitchFunction(deviceFunction.func)"
-            @click="opendeviceFunctionDetail(deviceFunction)"
+            @click="openDeviceFunctionModal(deviceFunction)"
             v-for="deviceFunction in deviceFunctions"
             :key="deviceFunction.id"
           />
         </div>
       </v-col>
     </v-row>
-    <DeviceFunctionDetail
+    <DeviceFunctionModal
       :dialog="dialog"
       :deviceFunction="selectDeviceFunction"
       @close="closeDialog"
@@ -35,16 +35,16 @@
 </template>
 
 <script>
-import DeviceFunctionDetail from "@/page/DeviceFunctionDetail.vue";
 import { mapGetters } from "vuex";
 import DeviceValueCard from "./DeviceValueCard.vue";
+import DeviceFunctionModal from "@/components/DeviceFunction/Modal.vue";
 
 export default {
   props: ["room"],
 
   components: {
     DeviceValueCard,
-    DeviceFunctionDetail,
+    DeviceFunctionModal,
   },
 
   data: () => ({
@@ -70,7 +70,7 @@ export default {
   },
 
   methods: {
-    opendeviceFunctionDetail(deviceFunction) {
+    openDeviceFunctionModal(deviceFunction) {
       this.selectDeviceFunction = deviceFunction;
       this.dialog = true;
     },

@@ -56,3 +56,11 @@ export default {
   },
 };
 </script>
+
+<style>
+.description-content {
+  border-radius: 5px 5px 5px 5px;
+  padding: 5px 10px 5px 10px;
+  margin: 10px 10px 10px 10px;
+}
+</style>

@@ -6,7 +6,7 @@
     <v-row class="my-5" v-if="room.description">
       <v-col>
         <div class="description">Описание</div>
-        <div class="px-1 py-2">{{ room.description }}</div>
+        <div class="description-content">{{ room.description }}</div>
       </v-col>
     </v-row>    
 
@@ -14,6 +14,7 @@
       class="px-0 py-0 my-5"
       :item="device"
       :title="device.name"
+      :description="device.description"
       :deviceFunctions="device.deviceFunctions"
       @onTitleClick="redirectToDeviceDetail"
       v-for="device in room.devices"

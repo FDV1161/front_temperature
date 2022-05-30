@@ -18,9 +18,23 @@
       <v-card-text v-if="deviceFunction">
         <v-container>
           <v-row>
-            <v-col cols="12" class="d-flex justify-end">
+            <v-col cols="6" class="d-flex justify-start align-center">
               <span class="mr-1">Обновлено:</span>
               <span>{{ updatedAt() }}</span>
+            </v-col>
+            <v-col cols="6" class="d-flex justify-end">
+              <v-btn
+                text
+                small
+                depressed
+                color="blue"
+                @click="
+                  $router.push({ name: 'room-details', params: { id: 1 } })
+                "
+              >
+                подробнее
+                <v-icon small>mdi-arrow-right</v-icon>
+              </v-btn>
             </v-col>
           </v-row>
           <v-row v-if="chartData">
@@ -254,5 +268,12 @@ export default {
 .values-table table tbody tr td {
   /* font-size: 14px !important; */
   color: rgba(0, 0, 0, 0.6);
+}
+.detail-url {
+  color: blue;
+}
+.detail-url:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>

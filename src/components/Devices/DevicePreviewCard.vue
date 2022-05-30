@@ -2,11 +2,30 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <div class="name">
-          <v-btn tile text class="text-capitalize" @click="onTitleClick">
+        <div class="d-flex justify-start align-center mb-2">
+          <div class="device-title text-capitalize">
             {{ title }}
+          </div>
+          <v-btn icon small v-if="description">
+            <v-icon small @click="descriptionShow = !descriptionShow">
+              <template v-if="descriptionShow">
+                mdi-arrow-up
+              </template>
+              <template v-else>
+                mdi-arrow-down
+              </template>
+            </v-icon>
           </v-btn>
         </div>
+        <v-expand-transition>
+          <div
+            v-if="description"
+            v-show="descriptionShow"
+            class="description-content"
+          >
+            {{ description }}
+          </div>
+        </v-expand-transition>
       </v-col>
     </v-row>
     <v-row>
@@ -40,7 +59,7 @@ import DeviceFunctionDetail from "@/page/DeviceFunctionDetail.vue";
 import DeviceValueCard from "@/components/Home/DeviceValueCard.vue";
 
 export default {
-  props: ["item", "title", "deviceFunctions"],
+  props: ["item", "title", "deviceFunctions", "description"],
 
   components: {
     DeviceValueCard,
@@ -54,6 +73,7 @@ export default {
   },
 
   data: () => ({
+    descriptionShow: false,
     deviceFunctionDialog: false,
     deviceFunctionSelected: null,
   }),
@@ -103,6 +123,10 @@ export default {
 </script>
 
 <style scoped>
+.device-title {
+  font-weight: 500;
+  color: #000000de;
+}
 .indent {
   margin-top: -12px;
 }

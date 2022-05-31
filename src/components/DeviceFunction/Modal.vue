@@ -41,7 +41,7 @@
                 depressed
                 color="blue"
                 @click="
-                  $router.push({ name: 'room-details', params: { id: 1 } })
+                  $router.push({ name: 'deviceFunction', params: { id: 1 } })
                 "
               >
                 подробнее

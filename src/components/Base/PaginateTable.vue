@@ -27,6 +27,7 @@ export default {
     defaultSortDesc: { default: null },
     defaultPage: { default: 1 },
     defaultItemsPerPage: { default: 5 },
+    rerender: { type: Boolean, default: false },
   },
 
   data: () => ({
@@ -46,6 +47,14 @@ export default {
   },
 
   watch: {
+    async rerender() {
+      await this.loadData(
+        this.defaultSortBy,
+        this.defaultSortDesc,
+        this.defaultPage,
+        this.defaultItemsPerPage
+      );
+    },
     options: {
       async handler() {
         const { sortBy, sortDesc, page, itemsPerPage } = this.options;

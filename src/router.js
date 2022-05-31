@@ -11,6 +11,7 @@ import RoomDetailsPage from '@/page/Rooms/Display.vue'
 import EditRoom from '@/page/Rooms/Edit.vue'
 import CreateRoom from '@/page/Rooms/Create.vue'
 import Devices from '@/page/Devices/Display.vue'
+import deviceFunction from '@/page/DeviceFunction.vue'
 import store from '@/store/index'
 
 Vue.use(Router)
@@ -88,6 +89,12 @@ const router = new Router({
             path: '/devices/:id',
             name: 'devices',
             component: Devices,
+            meta: { authCheck: true },
+        },
+        {
+            path: '/device-function/:id',
+            name: 'deviceFunction',
+            component: deviceFunction,
             meta: { authCheck: true },
         },
         {

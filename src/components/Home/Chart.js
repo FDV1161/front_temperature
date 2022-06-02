@@ -25,7 +25,7 @@ export default {
                 minute: "HH:mm",
                 second: "HH:mm:ss",
               },
-              tooltipFormat: "MM.DD.YYYY hh:mm:ss",
+              tooltipFormat: "DD.MM.YYYY hh:mm:ss",
             },
             display: true,
             scaleLabel: {

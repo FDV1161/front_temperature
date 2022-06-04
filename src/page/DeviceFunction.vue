@@ -2,20 +2,41 @@
   <v-container fluid v-if="!getLoading">
     <Title :name="deviceFunction.func.name" />
     <Breadcrumbs :items="breadcrumbsItems" />
+
+    <v-row class="mt-4">
+      <v-col class="d-flex justify-space-between align-center">
+        <span class="font-weight-bold">Текущее значение</span>
+        <span class="mr-3 text-h5 font-weight-bold">
+          {{ currentValue() }}
+          {{ deviceFunction.func.measureSymbol }}
+        </span>
+      </v-col>
+    </v-row>
+
+    <StatisticValues
+      class="mt-1 mb-4"
+      :avgValue="dynamicChartAvgCurrentValue()"
+      :minValue="dynamicChartMinCurrentValue()"
+      :maxValue="dynamicChartMaxCurrentValue()"
+      :measureSymbol="deviceFunction.func.measureSymbol"
+    />
+
+    <v-row v-if="dynamicChartDataValues">
+      <v-col>
+        <LineChart style="height: 200px" :chartData="dynamicChartDataValues" />
+      </v-col>
+    </v-row>
+
     <v-row>
       <v-col>
-        <v-tabs v-model="tab" class="my-5 custom-tabs">
-          <v-tab key="main">Основное</v-tab>
-          <v-tab key="chart"> Графики</v-tab>
+        <v-tabs v-model="tab" class="custom-tabs">
+          <v-tab key="chart">Графики</v-tab>
           <v-tab key="data">Данные</v-tab>
         </v-tabs>
       </v-col>
     </v-row>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item key="main">
-        {{ deviceFunction }}
-      </v-tab-item>
       <v-tab-item key="chart" class="mt-5">
         <v-row>
           <v-col cols="12" sm="4" class="d-flex justify-space-between">
@@ -44,6 +65,17 @@
           <v-col cols="12" sm="4"
             ><TimePicker v-model="chartDateTo" label="по"
           /></v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <StatisticValues
+              class="mt-0"
+              :avgValue="chartAvgCurrentValue"
+              :minValue="chartMinCurrentValue"
+              :maxValue="chartMaxCurrentValue"
+              :measureSymbol="deviceFunction.func.measureSymbol"
+            />
+          </v-col>
         </v-row>
         <v-row>
           <v-col>
@@ -91,6 +123,16 @@
         </v-row>
         <v-row>
           <v-col>
+            <StatisticValues
+              :avgValue="tableAvgCurrentValue"
+              :minValue="tableMinCurrentValue"
+              :maxValue="tableMaxCurrentValue"
+              :measureSymbol="deviceFunction.func.measureSymbol"
+            />
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <PaginageTable
               :headers="headers"
               :loadFunction="loadTableDataFunction"
@@ -121,6 +163,14 @@ import PaginageTable from "@/components/Base/PaginateTable.vue";
 import TimePicker from "@/components/Base/Fields/TimePicker.vue";
 import Chart from "@/components/DeviceFunction/Chart.js";
 import { mapActions, mapGetters } from "vuex";
+import LineChart from "@/components/Home/Chart.js";
+import StatisticValues from "@/components/Base/StatisticValues.vue";
+import {
+  calcMaxValue,
+  calcMinValue,
+  calcAvgValue,
+  toFixedNumber,
+} from "@/utils/index.js";
 
 export default {
   components: {
@@ -129,6 +179,8 @@ export default {
     TimePicker,
     Title,
     Chart,
+    LineChart,
+    StatisticValues,
   },
 
   data() {
@@ -142,6 +194,13 @@ export default {
       chartDownloadFlag: false,
       chartDownloadLoader: false,
       chartViewPoint: true,
+      dynamicChartData: [],
+      chartMaxCurrentValue: null,
+      chartMinCurrentValue: null,
+      chartAvgCurrentValue: null,
+      tableMaxCurrentValue: null,
+      tableMinCurrentValue: null,
+      tableAvgCurrentValue: null,
       tab: null,
       dateFrom: null,
       dateTo: null,
@@ -150,6 +209,7 @@ export default {
       device: {},
       deviceFunction: {},
       downloadFileLoader: false,
+      tableDataValues: [],
       headers: [
         {
           text: "Дата",
@@ -182,6 +242,23 @@ export default {
     },
   },
 
+  mounted() {
+    this.sockets.subscribe("message", (device_function) => {
+      if (device_function.id == this.deviceFunction.id) {
+        this.dynamicChartData.push({
+          id: null,
+          value: device_function.cur_val,
+          deviceFuncId: device_function.id,
+          updatedAt: device_function.updated_at,
+        });
+      }
+    });
+  },
+
+  destroyed() {
+    this.sockets.unsubscribe("message");
+  },
+
   async created() {
     this.setLoading(true);
     this.deviceFunction = (
@@ -196,6 +273,8 @@ export default {
   computed: {
     ...mapGetters({
       getLoading: "loader/getLoading",
+      getCurValues: "soketio/getCurValues",
+      soketValue: "soketio/getCurValue",
     }),
     breadcrumbsItems() {
       return [
@@ -221,6 +300,16 @@ export default {
         },
       ];
     },
+    dynamicChartDataValues() {
+      return {
+        labels: this.dynamicChartData.map((e) => e.updatedAt),
+        datasets: [
+          {
+            data: this.dynamicChartData.map((e) => e.value),
+          },
+        ],
+      };
+    },
     chartDataValues() {
       return {
         labels: this.chartData.map((e) => e.updatedAt),
@@ -245,8 +334,39 @@ export default {
         updatedAtFrom: this.dateFrom ? moment(this.dateFrom).valueOf() : null,
         updatedAtTo: this.dateTo ? moment(this.dateTo).valueOf() : null,
       });
+      this.tableDataValues = response.data.values;
+      this.tableMaxCurrentValue = toFixedNumber(response.data.maxValue);
+      this.tableMinCurrentValue = toFixedNumber(response.data.minValue);
+      this.tableAvgCurrentValue = toFixedNumber(response.data.avgValue);
       return [response.data.values, response.data.rowCount];
     },
+    dynamicChartMaxCurrentValue() {
+      return calcMaxValue(this.dynamicChartData.map((v) => v.value));
+    },
+    dynamicChartMinCurrentValue() {
+      return calcMinValue(this.dynamicChartData.map((v) => v.value));
+    },
+    dynamicChartAvgCurrentValue() {
+      return calcAvgValue(this.dynamicChartData.map((v) => v.value));
+    },
+    // chartMaxCurrentValue() {
+    //   return calcMaxValue(this.chartData.map((v) => v.value));
+    // },
+    // chartMinCurrentValue() {
+    //   return calcMinValue(this.chartData.map((v) => v.value));
+    // },
+    // chartAvgCurrentValue() {
+    //   return calcAvgValue(this.chartData.map((v) => v.value));
+    // },
+    // tableMaxCurrentValue() {
+    //   return calcMaxValue(this.tableDataValues.map((v) => v.value));
+    // },
+    // tableMinCurrentValue() {
+    //   return calcMinValue(this.tableDataValues.map((v) => v.value));
+    // },
+    // tableAvgCurrentValue() {
+    //   return calcAvgValue(this.tableDataValues.map((v) => v.value));
+    // },
     loadChartData() {
       this.chartDataLoading = true;
       this.$api.journalReadings
@@ -261,6 +381,9 @@ export default {
         })
         .then((response) => {
           this.chartData = response.data.values;
+          this.chartMaxCurrentValue = toFixedNumber(response.data.maxValue);
+          this.chartMinCurrentValue = toFixedNumber(response.data.minValue);
+          this.chartAvgCurrentValue = toFixedNumber(response.data.avgValue);
           this.chartDataLoading = false;
         });
     },
@@ -306,6 +429,13 @@ export default {
       URL.revokeObjectURL(link.href);
       link.remove();
     },
+    currentValue() {
+      const soketValue = this.soketValue(this.deviceFunction.id);
+      if (soketValue && soketValue.cur_val) {
+        return soketValue.cur_val;
+      }
+      return this.deviceFunction.curVal;
+    },
   },
 };
 </script>
@@ -323,6 +453,9 @@ export default {
 }
 .custom-select.v-input {
   padding-top: 0;
+}
+.custom-select .v-text-field__details {
+  display: none;
 }
 .custom-tabs .v-slide-group__prev.v-slide-group__prev--disabled {
   display: none !important;

@@ -1,26 +1,12 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="formValid">
     <v-container fluid>
-      <v-row>
-        <v-col class="px-0">
-          <v-toolbar flat>
-            <v-toolbar-title>Редакторование пользователя</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn class="mr-2" text tile @click="$router.go(-1)">
-              Назад
-            </v-btn>
-            <v-btn
-              color="primary"
-              tile
-              v-on:click="updateItem"
-              :disabled="!valid"
-            >
-              <v-icon left> mdi-content-save </v-icon>
-              Сохранить
-            </v-btn>
-          </v-toolbar>
-        </v-col>
-      </v-row>
+      <Title
+        name="Создание пользователя"
+        :showSaveBtn="true"
+        @onSaveBtnClick="onSave"
+        :saveBtnValid="formValid"
+      />
 
       <input-field v-model="user.login" label="Username" required />
       <input-field v-model="user.name" label="Имя" />
@@ -34,8 +20,12 @@
         item-value="id"
         item-text="name"
       ></v-select>
-      <input-field v-model="user.password" label="Пароль" />
-      <input-field v-model="user.confirmPassword" label="Повторите пароль" />
+      <input-field v-model="user.password" label="Пароль" required />
+      <input-field
+        v-model="user.confirmPassword"
+        label="Повторите пароль"
+        required
+      />
     </v-container>
   </v-form>
 </template>
@@ -45,14 +35,16 @@ import { mapActions } from "vuex";
 import { console_print_error } from "@/utils/index";
 import { EDITOR, VIEWER } from "@/settings.js";
 import InputField from "@/components/Base/Fields/InputField.vue";
+import Title from "@/components/Base/Title.vue";
 
 export default {
   components: {
     InputField,
+    Title,
   },
   data() {
     return {
-      valid: false,
+      formValid: false,
       groups: [
         { id: EDITOR, name: "editor" },
         { id: VIEWER, name: "viewer" },
@@ -69,32 +61,21 @@ export default {
     };
   },
 
-  created() {
-    this.$api.groups.getList().then((responce) => {
-      this.groups = responce.data;
-    });
-    this.$api.users.get(this.$route.params.id).then((responce) => {
-      this.user = responce.data;
-    });
-  },
-
   methods: {
     ...mapActions({
       pushNotifications: "notifications/push_notifications",
     }),
-    updateItem() {
+    onSave() {
       this.$api.users
-        .update(this.user)
-        .then((responce) => {
+        .create(this.user)
+        .then((response) => {
           this.pushNotifications({
             type: "success",
-            message: "Пользователь обновлен",
+            message: "Пользователь создан",
           });
-          this.$router.push({
-            name: "users",
-          });
+          this.$router.push({ name: "users" });
         })
-        .catch((error) => {          
+        .catch((error) => {
           var errorMessage = error.response.data;
           if (typeof error.response.data === "object") {
             errorMessage =
@@ -110,9 +91,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.field-header {
-  height: 90px;
-}
-</style>

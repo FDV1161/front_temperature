@@ -53,8 +53,7 @@ export default {
         .then((responce) => {
           this.$store.dispatch("user/signIn", responce.data.token);
         })
-        .catch((error) => {
-          console.log(error);
+        .catch((error) => {          
           this.errorMessages = ["Неверный логин или пароль"];
           this.$refs.loginForm.validate();
         });

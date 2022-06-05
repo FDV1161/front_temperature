@@ -78,11 +78,17 @@ const router = new Router({
             name: 'users',
             component: UsersList,
             meta: { authCheck: true },
-        },
+        },        
         {
             path: '/users/:id',
             name: 'usersEdit',
             component: () => import('@/page/Users/UsersEdit'),
+            meta: { authCheck: true },
+        },
+        {
+            path: '/users/create',
+            name: 'usersCreate',
+            component: () => import('@/page/Users/UsersCreate'),
             meta: { authCheck: true },
         },
         {

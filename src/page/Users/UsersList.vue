@@ -26,7 +26,7 @@
                     hide-details
                     class="mr-5"
                   ></v-text-field>
-                  <v-btn icon tile router :to="{ name: 'users-create' }">
+                  <v-btn icon tile router :to="{ name: 'usersCreate' }">
                     <v-icon>mdi-plus</v-icon>
                   </v-btn>
                 </v-toolbar>
@@ -120,13 +120,13 @@ export default {
         align: "start",
         value: "patronymic",
       },
-      // {
-      //   text: "",
-      //   value: "actions",
-      //   align: "start",
-      //   width: "80px",
-      //   sortable: false,
-      // },
+      {
+        text: "",
+        value: "actions",
+        align: "start",
+        width: "80px",
+        sortable: false,
+      },
     ],
   }),
 

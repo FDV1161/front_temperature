@@ -37,19 +37,13 @@
             :functionName="deviceFunction.func.name"
             :updateTime="getUpdateTime(deviceFunction)"
             :isSwitch="isSwitchFunction(deviceFunction.func)"
-            @click="deviceFunctionDialogOpen(deviceFunction)"
+            @click="$router.push({ name: 'deviceFunction', params: { id: deviceFunction.id } })"
             v-for="deviceFunction in deviceFunctions"
             :key="deviceFunction.id"
           />
         </div>
       </v-col>
-    </v-row>
-    <DeviceFunctionModal
-      :dialog="deviceFunctionDialog"
-      :deviceFunction="deviceFunctionSelected"
-      @close="deviceFunctionDialogClose"
-      v-if="deviceFunctionDialog"
-    />
+    </v-row>    
   </v-container>
 </template>
 

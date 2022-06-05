@@ -4,6 +4,12 @@
     <Breadcrumbs :items="breadcrumbsItems" />
 
     <v-row class="mt-4">
+      <v-col class="updated-date d-flex justify-end align-center mr-3">
+        <span class="mr-1">Обновлено:</span>
+        <span>{{ updatedAt() }}</span>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col class="d-flex justify-space-between align-center">
         <span class="font-weight-bold">Текущее значение</span>
         <span class="mr-3 text-h5 font-weight-bold">
@@ -32,6 +38,14 @@
         <v-tabs v-model="tab" class="custom-tabs">
           <v-tab key="chart">Графики</v-tab>
           <v-tab key="data">Данные</v-tab>
+          <v-tab
+            v-if="
+              deviceFunction.writeEnable &&
+                [EDITOR, ADMIN].includes(user.group.id)
+            "
+            key="management"
+            >Управление</v-tab
+          >
         </v-tabs>
       </v-col>
     </v-row>
@@ -151,11 +165,19 @@
           </v-col>
         </v-row>
       </v-tab-item>
+      <v-tab-item key="management" class="mt-5">
+        <v-row>
+          <v-col>
+            <RunnerField :deviceFunction="deviceFunction" />
+          </v-col>
+        </v-row>
+      </v-tab-item>
     </v-tabs-items>
   </v-container>
 </template>
 
 <script>
+import { ADMIN, EDITOR } from "@/settings.js";
 import moment from "moment";
 import Title from "@/components/Base/Title.vue";
 import Breadcrumbs from "@/components/Base/Breadcrumbs.vue";
@@ -165,6 +187,8 @@ import Chart from "@/components/DeviceFunction/Chart.js";
 import { mapActions, mapGetters } from "vuex";
 import LineChart from "@/components/Home/Chart.js";
 import StatisticValues from "@/components/Base/StatisticValues.vue";
+import RunnerField from "@/components/Functions/RunnerField.vue";
+
 import {
   calcMaxValue,
   calcMinValue,
@@ -181,10 +205,13 @@ export default {
     Chart,
     LineChart,
     StatisticValues,
+    RunnerField,
   },
 
   data() {
     return {
+      ADMIN: ADMIN,
+      EDITOR: EDITOR,
       chartGroupTypes: ["дням", "месяцам", "годам"],
       chartGroupTypeSelected: "дням",
       chartDataLoading: false,
@@ -264,7 +291,9 @@ export default {
     this.deviceFunction = (
       await this.$api.deviceFunctions.get(this.$route.params.id)
     ).data;
-    this.device = (await this.$api.devices.get(this.deviceFunction.id)).data;
+    this.device = (
+      await this.$api.devices.get(this.deviceFunction.idDevice)
+    ).data;
     this.room = (await this.$api.rooms.getRoom(this.device.roomId)).data;
     this.setLoading(false);
     this.loadChartData();
@@ -275,6 +304,7 @@ export default {
       getLoading: "loader/getLoading",
       getCurValues: "soketio/getCurValues",
       soketValue: "soketio/getCurValue",
+      user: "user/getUser",
     }),
     breadcrumbsItems() {
       return [
@@ -349,24 +379,14 @@ export default {
     dynamicChartAvgCurrentValue() {
       return calcAvgValue(this.dynamicChartData.map((v) => v.value));
     },
-    // chartMaxCurrentValue() {
-    //   return calcMaxValue(this.chartData.map((v) => v.value));
-    // },
-    // chartMinCurrentValue() {
-    //   return calcMinValue(this.chartData.map((v) => v.value));
-    // },
-    // chartAvgCurrentValue() {
-    //   return calcAvgValue(this.chartData.map((v) => v.value));
-    // },
-    // tableMaxCurrentValue() {
-    //   return calcMaxValue(this.tableDataValues.map((v) => v.value));
-    // },
-    // tableMinCurrentValue() {
-    //   return calcMinValue(this.tableDataValues.map((v) => v.value));
-    // },
-    // tableAvgCurrentValue() {
-    //   return calcAvgValue(this.tableDataValues.map((v) => v.value));
-    // },
+    updatedAt() {
+      var updatedAtValue = this.deviceFunction.updatedAt;
+      const soketValue = this.soketValue(this.deviceFunction.id);
+      if (soketValue && soketValue.cur_val) {
+        updatedAtValue = soketValue.updated_at;
+      }
+      return moment(updatedAtValue).format("DD.MM.YYYY hh:mm");
+    },
     loadChartData() {
       this.chartDataLoading = true;
       this.$api.journalReadings
@@ -441,6 +461,10 @@ export default {
 </script>
 
 <style>
+.updated-date {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+}
 .custom-progress-circular {
   height: 32px;
   width: 32px;

@@ -1,13 +1,13 @@
 export default function (instance) {
     return {
         getAll() {
-            return instance.get('device')
+            return instance.get('device/')
         },
         get(payload){
             return instance.get('device/'+ payload)
         },
         create(payload) {
-            return instance.post('device', payload)
+            return instance.post('device/', payload)
         },
         delete(payload) {
             return instance.delete('device/' + payload)

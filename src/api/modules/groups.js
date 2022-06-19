@@ -1,7 +1,7 @@
 export default function (instance) {
     return {        
         getList(payload){
-            return instance.get('group')
+            return instance.get('group/')
         },       
     }
 }

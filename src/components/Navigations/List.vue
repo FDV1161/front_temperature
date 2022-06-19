@@ -109,6 +109,8 @@ export default {
     }),
     logout() {
       this.signOut();
+      localStorage.removeItem("token");
+      this.$router.push({ name: "login" });
     },
   },
 };

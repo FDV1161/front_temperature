@@ -53,7 +53,6 @@
   </v-app-bar>
 </template>
 
-
 <script>
 import { mapActions, mapGetters } from "vuex";
 
@@ -73,6 +72,8 @@ export default {
     }),
     logout() {
       this.signOut();
+      localStorage.removeItem("token");
+      this.$router.push({ name: "login" });
     },
   },
 };

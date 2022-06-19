@@ -4,7 +4,7 @@ export default function(instance) {
       return instance.get("device_functions/" + payload);
     },
     create(payload) {
-      return instance.post("device_functions", payload);
+      return instance.post("device_functions/", payload);
     },
     delete(payload) {
       return instance.delete("device_functions/" + payload);
@@ -13,7 +13,7 @@ export default function(instance) {
       return instance.put("device_functions/" + payload.id, payload);
     },
     run(payload) {
-      return instance.post("device_functions/run", payload);
+      return instance.post("device_functions/run/", payload);
     },
   };
 }

@@ -27,12 +27,12 @@ export default {
     ProgressLoading,
   },
 
-  mounted() {
+  created() {
     const token = localStorage.getItem("token");
     if (token) {
-      this.signIn(token);
+      this.logIn(token);
     } else {
-      this.signOut();
+      this.logOut();
     }
   },
 
@@ -45,9 +45,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      user: "user/getUser",
       isAuth: "user/isAuth",
-      values: "soketio/values",
     }),
   },
 
@@ -55,8 +53,17 @@ export default {
     ...mapActions({
       signIn: "user/signIn",
       signOut: "user/signOut",
-      setFunctions: "functions/loadFunctions",
     }),
+    logIn(token) {
+      localStorage.setItem("token", token);
+      this.$api.auth.getMe().then((responce) => {
+        this.signIn(responce.data);
+      });
+    },
+    logOut() {
+      this.signOut();
+      localStorage.removeItem("token");
+    },
   },
 };
 </script>

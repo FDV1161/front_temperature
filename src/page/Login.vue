@@ -2,7 +2,7 @@
   <v-container fill-height>
     <v-row align="center" justify="center">
       <v-col cols="8" sm="6" md="6">
-        <v-form ref="loginForm" @submit.prevent="signIn">
+        <v-form ref="loginForm" @submit.prevent="authUser">
           <h2 class="h2 text-center">Авторизация</h2>
           <input-field
             v-model.trim="username"
@@ -29,7 +29,7 @@
 
 <script>
 import InputField from "../components/Base/Fields/InputField";
-import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   data() {
@@ -43,7 +43,11 @@ export default {
     InputField,
   },
   methods: {
-    signIn() {
+    ...mapActions({
+      signIn: "user/signIn",
+    }),
+
+    authUser() {
       if (!this.$refs.loginForm.validate()) return;
       this.$api.auth
         .getToken({
@@ -51,12 +55,20 @@ export default {
           password: this.password,
         })
         .then((responce) => {
-          this.$store.dispatch("user/signIn", responce.data.token);
+          this.logIn(responce.data.token);
         })
-        .catch((error) => {          
+        .catch((error) => {
           this.errorMessages = ["Неверный логин или пароль"];
           this.$refs.loginForm.validate();
         });
+    },
+
+    logIn(token) {
+      localStorage.setItem("token", token);
+      this.$api.auth.getMe().then((responce) => {
+        this.signIn(responce.data);
+        this.$router.push(this.$route.query.redirect || "/");
+      });
     },
   },
 };

@@ -23,7 +23,7 @@
       class="mt-1 mb-4"
       :avgValue="dynamicChartAvgCurrentValue()"
       :minValue="dynamicChartMinCurrentValue()"
-      :maxValue="dynamicChartMaxCurrentValue()"
+      :maxValue="dynamicChartMaxCurrentValue()"      
       :measureSymbol="deviceFunction.func.measureSymbol"
     />
 
@@ -222,6 +222,9 @@ export default {
       chartDownloadLoader: false,
       chartViewPoint: true,
       dynamicChartData: [],
+      dynamicChartAvgLoading: true,
+      dynamicChartMinLoading: true,
+      dynamicChartMaxLoading: true,
       chartMaxCurrentValue: null,
       chartMinCurrentValue: null,
       chartAvgCurrentValue: null,
@@ -371,13 +374,13 @@ export default {
       return [response.data.values, response.data.rowCount];
     },
     dynamicChartMaxCurrentValue() {
-      return calcMaxValue(this.dynamicChartData.map((v) => v.value));
+      return calcMaxValue(this.dynamicChartData.map((v) => v.value));            
     },
     dynamicChartMinCurrentValue() {
-      return calcMinValue(this.dynamicChartData.map((v) => v.value));
+      return calcMinValue(this.dynamicChartData.map((v) => v.value));      
     },
     dynamicChartAvgCurrentValue() {
-      return calcAvgValue(this.dynamicChartData.map((v) => v.value));
+      return calcAvgValue(this.dynamicChartData.map((v) => v.value))            
     },
     updatedAt() {
       var updatedAtValue = this.deviceFunction.updatedAt;

@@ -6,6 +6,7 @@
       :options.sync="options"
       :items="items"
       :server-items-length="itemsPerPage"
+      :footer-props="{ 'items-per-page-options': [10, 50, 100] }"
       v-bind="$attrs"
     >
       <slot v-for="slot in Object.keys($slots)" :name="slot" :slot="slot" />

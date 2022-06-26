@@ -5,7 +5,7 @@
       @close="close"
       @save="save"
       title="Подключение функции"
-      saveTitle="Добавить"
+      saveTitle="Сохранить"
   >
     <v-form ref="deviceFunctionEditForm" v-model="valid">
       <v-container fluid>

@@ -12,7 +12,7 @@
         <input-field v-model="device.name" label="Название" required/>
         <input-field v-model="device.description" label="Описание"/>
 
-        <v-row>
+        <v-row v-show="false">
           <v-col>
             <v-file-input
                 id="fileUpload"

@@ -8,7 +8,7 @@
           </v-btn>
         </div>
       </v-col>
-    </v-row>
+    </v-row>  
     <v-row>
       <v-col class="indent">
         <div class="devices">
@@ -18,13 +18,18 @@
             :functionName="deviceFunction.func.name"
             :updateTime="getUpdateTime(deviceFunction)"
             :isSwitch="isSwitchFunction(deviceFunction.func)"
-            @click="$router.push({ name: 'deviceFunction', params: { id: deviceFunction.id } })"
+            @click="
+              $router.push({
+                name: 'deviceFunction',
+                params: { id: deviceFunction.id },
+              })
+            "
             v-for="deviceFunction in deviceFunctions"
             :key="deviceFunction.id"
           />
         </div>
       </v-col>
-    </v-row>    
+    </v-row>
   </v-container>
 </template>
 
@@ -56,7 +61,9 @@ export default {
       var deviceFunctions = [];
       this.room.devices.forEach((device) => {
         device.deviceFunctions.forEach((deviceFunction) => {
-          deviceFunctions.push(deviceFunction);
+          if (deviceFunction.onHome) {
+            deviceFunctions.push(deviceFunction);
+          }
         });
       });
       return deviceFunctions;
@@ -86,7 +93,7 @@ export default {
       return func.minValue == 0 && func.maxValue === 1;
     },
     functionName(func) {
-      if (func) {        
+      if (func) {
         return func.name;
       }
       return "";

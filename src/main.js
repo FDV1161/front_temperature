@@ -6,9 +6,9 @@ import router from "./router";
 import apiPlugin from "./plugins/api";
 import store from "./store/index";
 import socketio from "socket.io-client";
-import { baseURL } from "./settings";
+import { SoketIOURLPath, SoketIOURL } from "./settings";
 
-export const SocketInstance = socketio(baseURL);
+export const SocketInstance = socketio(SoketIOURL, { path: SoketIOURLPath });
 import VueSocketIO from "vue-socket.io";
 
 Chart.pluginService.register({

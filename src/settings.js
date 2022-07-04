@@ -1,5 +1,11 @@
-export const baseURL = "http://localhost:5000";
-export const ImageURL = "http://localhost:5000/static";
+export const baseURL = "/api";
+export const ImageURL = "/api";
+export const SoketIOURL = "/";
+export const SoketIOURLPath = "/websoket/socket.io";
 export const ADMIN = 1;
 export const EDITOR = 2;
 export const VIEWER = 3;
+// export const SoketIOURLPath = "/websoket";
+// export const baseURL = "http://127.0.0.1:5000";
+// export const SoketIOURL = "http://127.0.0.1:8080/";
+// export const ImageURL = "http://127.0.0.1:5000/static";
